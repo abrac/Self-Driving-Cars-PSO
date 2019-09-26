@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Scenes/Trial1.unity
-  isLoaded: 1
-  isActive: 1
