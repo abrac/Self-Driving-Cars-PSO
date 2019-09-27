@@ -4,15 +4,11 @@ using UnityEngine;
 using System;
 
 public class Feelers_RayGenerator : MonoBehaviour
-{
-    public float dist60;
-    public float dist30;
-    public float dist0;
-    public float distNeg30;
-    public float distNeg60;
+{ 
+    public float[] feelerDists = new float[5];
+    public float fieldOfView = 120;
     private float feelerLength = 8;
 
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -22,11 +18,10 @@ public class Feelers_RayGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dist0 = getDistInDir(0);
-        dist30 = getDistInDir(30);
-        dist60 = getDistInDir(60);
-        distNeg30 = getDistInDir(-30);
-        distNeg60 = getDistInDir(-60);
+        for (int i = 0; i < feelerDists.Length; i++)
+        {
+            feelerDists[i] = getDistInDir(-fieldOfView / 2 + i * fieldOfView / (feelerDists.Length - 1));
+        }
     }
     float getDistInDir(float angleDeg)
     {
