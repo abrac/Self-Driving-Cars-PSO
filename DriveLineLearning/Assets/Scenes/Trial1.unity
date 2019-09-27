@@ -381,6 +381,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e7079d940570be4d8c6e7afb17a599c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dist0: 0
+  dist45: 0
+  distNeg45: 0
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -887,14 +890,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 100042, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
+      propertyPath: m_Name
+      value: Car
+      objectReference: {fileID: 0}
     - target: {fileID: 1365329753991687541, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
         type: 3}
       propertyPath: m_Name
       value: FeelerContainer
-      objectReference: {fileID: 0}
-    - target: {fileID: 100042, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
-      propertyPath: m_Name
-      value: Car
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -955,6 +958,10 @@ PrefabInstance:
     - target: {fileID: 6500004, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_Center.z
       value: -0.052218888
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
+      propertyPath: m_SpeedType
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
