@@ -1,15 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Feelers_RayGenerator : MonoBehaviour
 {
+    public float dist60;
+    public float dist30;
     public float dist0;
-    public float dist45;
-    public float distNeg45;
+    public float distNeg30;
+    public float distNeg60;
     private float feelerLength = 8;
 
-    RaycastHit hit;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -19,45 +22,31 @@ public class Feelers_RayGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //0 degrees
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, feelerLength))
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-            dist0 = hit.distance;
-        }
-        else
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * feelerLength, Color.blue);
-            dist0 = -1;
-        }
-
-        //45 degrees
-        Vector3 directionVector45 = transform.localPosition + new Vector3((float)(1 / System.Math.Sqrt(2)), 0, (float)(1 / System.Math.Sqrt(2)));
-        directionVector45 = transform.TransformVector(directionVector45);
-        if (Physics.Raycast(transform.position, directionVector45, out hit, feelerLength))
-        {
-            Debug.DrawRay(transform.position, directionVector45 * hit.distance, Color.yellow);
-            dist45 = hit.distance;
-        }
-        else
-        {
-            Debug.DrawRay(transform.position, directionVector45 * feelerLength, Color.blue);
-            dist45 = -1;
-        }
-
-        //-45 degrees
-        Vector3 directionVectorNeg45 = transform.localPosition + new Vector3((float)(-1 / System.Math.Sqrt(2)), 0, (float)(1 / System.Math.Sqrt(2)));
-        directionVectorNeg45 = transform.TransformVector(directionVectorNeg45);
-        if (Physics.Raycast(transform.position, directionVectorNeg45, out hit, feelerLength))
-        {
-            Debug.DrawRay(transform.position, directionVectorNeg45 * hit.distance, Color.yellow);
-            distNeg45 = hit.distance;
-        }
-        else
-        {
-            Debug.DrawRay(transform.position, directionVectorNeg45 * feelerLength, Color.blue);
-            distNeg45 = -1;
-        }
+        dist0 = getDistInDir(0);
+        dist30 = getDistInDir(30);
+        dist60 = getDistInDir(60);
+        distNeg30 = getDistInDir(-30);
+        distNeg60 = getDistInDir(-60);
     }
+    float getDistInDir(float angleDeg)
+    {
+        float angle = -(float)(angleDeg * Math.PI / 180);
+        float dist;
+        RaycastHit hit;
+        //Getting direction vector, first in local space, then world space
+        Vector3 directionVector = transform.localPosition + new Vector3((float)Math.Sin(angle), 0, (float)(Math.Cos(angle)));
+        directionVector = transform.TransformVector(directionVector);
 
+        if (Physics.Raycast(transform.position, directionVector, out hit, feelerLength))
+        {
+            Debug.DrawRay(transform.position, directionVector * hit.distance, Color.yellow);
+            dist = hit.distance;
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, directionVector * feelerLength, Color.blue);
+            dist = -1;
+        }
+        return dist;
+    }
 }
