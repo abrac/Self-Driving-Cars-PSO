@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Feelers_RayGenerator : MonoBehaviour
 {
+    public float Dist0 { get; private set; }
+    public float Dist45 { get; private set; }
+    public float DistNeg45 { get; private set; }
+
     RaycastHit hit;
     // Start is called before the first frame update
     void Start()
@@ -18,12 +22,12 @@ public class Feelers_RayGenerator : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 5.0f))
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-            Debug.Log("0deg Hit at " + hit.distance);
+            Dist0 = hit.distance;
         }
         else
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 5, Color.blue);
-            Debug.Log("0deg Did not Hit");
+            Dist0 = -1;
         }
 
         //45 degrees
@@ -33,11 +37,12 @@ public class Feelers_RayGenerator : MonoBehaviour
         {
             Debug.DrawRay(transform.position, directionVector45 * hit.distance, Color.yellow);
             Debug.Log("45deg Hit at " + hit.distance);
+            Dist45 = hit.distance;
         }
         else
         {
             Debug.DrawRay(transform.position, directionVector45 * 5, Color.blue);
-            Debug.Log("45deg Did not Hit");
+            Dist45 = -1;
         }
 
         //-45 degrees
@@ -46,12 +51,12 @@ public class Feelers_RayGenerator : MonoBehaviour
         if (Physics.Raycast(transform.position, directionVectorNeg45, out hit, 5.0f))
         {
             Debug.DrawRay(transform.position, directionVectorNeg45 * hit.distance, Color.yellow);
-            Debug.Log("-45deg Hit at " + hit.distance);
+            DistNeg45 = hit.distance;
         }
         else
         {
             Debug.DrawRay(transform.position, directionVectorNeg45 * 5, Color.blue);
-            Debug.Log("-45deg Did not Hit");
+            DistNeg45 = -1;
         }
     }
 
