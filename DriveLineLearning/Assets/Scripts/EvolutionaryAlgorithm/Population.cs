@@ -9,9 +9,4 @@ public class Population : MonoBehaviour
     {
         //Create genes array representing weights of NN, and initialize with random NN wieghts.
     }
-
-    public GetOutputsOfNN(float[] inputs)
-    {
-
-    }
 }
