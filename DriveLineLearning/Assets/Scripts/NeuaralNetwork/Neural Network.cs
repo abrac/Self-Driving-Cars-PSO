@@ -15,8 +15,8 @@ public class NeuralNetwork : MonoBehaviour
     private const float euler = 2.71828f;
 
     // List of neuron outputs and weights
-    private List<List<float>> neurons;
-    private List<float[][]> weights;
+    private List<List<float>> neurons { get; set; }
+    private List<float[][]> weights { get; set; }
 
     private int layers;
 
@@ -118,15 +118,5 @@ public class NeuralNetwork : MonoBehaviour
         return size;
 
     }
-   
 
-    public List<List<float>> getNeurons()
-    {
-        return neurons;
-    }
-
-    public List<float[][]> getWeights()
-    {
-        return weights;
-    }
 }
