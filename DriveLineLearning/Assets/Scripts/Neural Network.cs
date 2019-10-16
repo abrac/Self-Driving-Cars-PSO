@@ -11,10 +11,10 @@ public class NeuralNetwork : MonoBehaviour
     public int inputs = 5;
     public float maxValue = 1f;
 
-    //Sigmoid function parameters
+    // Sigmoid function parameters
     private const float euler = 2.71828f;
 
-    //List of neuron outputs and weights
+    // List of neuron outputs and weights
     private List<List<float>> neurons;
     private List<float[][]> weights;
 
@@ -36,7 +36,7 @@ public class NeuralNetwork : MonoBehaviour
             {
                 layerWeights = new float[size][];
                 int nextSize = getSizeLayer(i + 1); // size of the next layer
-                for (int j = 0; j < size j++)
+                for (int j = 0; j < size;  j++)
                 {
                     layerWeights[j] = new float[nextSize];
                     for (int k = 0; k < nextSize; k++)
