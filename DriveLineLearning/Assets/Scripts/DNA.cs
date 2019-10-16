@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class DNA : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    // Create genes(weights) property
+
+    public DNA()
     {
-        
+        //Create genes array representing weights of NN, and initialize with random NN wieghts.
     }
 
-    // Update is called once per frame
-    void Update()
+    public GetOutputsOfNN(float[] inputs)
     {
-        
+
     }
 }

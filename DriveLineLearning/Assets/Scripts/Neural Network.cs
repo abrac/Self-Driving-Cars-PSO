@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NeuralNetwork 
+public class NeuralNetwork : MonoBehaviour
 {
-
-   public int hidddenLayers = 1;
+    // Neural Network parameters
+    public int hidddenLayers = 1;
     public int hLayer_size = 5;
     public int outputs = 1;
     public int inputs = 5;
     public float maxValue = 1f;
 
+    //Sigmoid function parameters
     private const float euler = 2.71828f;
+
+    //List of neuron outputs and weights
     private List<List<float>> neurons;
     private List<float[][]> weights;
 
-    private int layers = 0;
+    private int layers;
 
-    public NeuralNetwork()
+    void Start()
     {
         layers = hidddenLayers + 2; // total layers including input and output layers
         weights = new List<float[][]>(); //weight initialisation
@@ -51,9 +54,9 @@ public class NeuralNetwork
         }
     }
 
-    public  NeuralNetwork(DNA dna)
+    public void ChangeWeights(List<float[][]> weights)
     {
-
+        this.weights = weights;
     }
 
     public void Feedforward(float [] inputs)
