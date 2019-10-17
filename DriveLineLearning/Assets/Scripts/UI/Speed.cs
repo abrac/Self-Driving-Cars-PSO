@@ -6,18 +6,18 @@ using UnityEngine.UI;
 public class Speed : MonoBehaviour
 {
     public Text SpeedText;
-    private float lastposition;
+    private Vector3 lastposition;
     // Start is called before the first frame update
     void Start()
     {
-        lastposition = 0;
+        lastposition = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float speed = (transform.position.magnitude - lastposition)/Time.deltaTime;
-        lastposition = transform.position.magnitude;
+        float speed = Vector3.Distance(lastposition, transform.position)/Time.deltaTime;
+        lastposition = transform.position;
 
         string SpeedToShow = Mathf.Abs(((int)speed)).ToString();
 
