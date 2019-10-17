@@ -1542,6 +1542,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4364079860775405646, guid: a876d6c4515ea5c44a6b167cc98de628,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4364079860767320776, guid: a876d6c4515ea5c44a6b167cc98de628,
         type: 3}
       propertyPath: m_SuspensionDistance
@@ -2373,6 +2378,7 @@ GameObject:
   - component: {fileID: 1748912370}
   - component: {fileID: 1748912369}
   - component: {fileID: 1748912373}
+  - component: {fileID: 1748912374}
   m_Layer: 0
   m_Name: Curve
   m_TagString: Untagged
@@ -2507,9 +2513,25 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: -1
   m_Mesh: {fileID: 1376710744}
+--- !u!54 &1748912374
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748912368}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1757203576
 GameObject:
   m_ObjectHideFlags: 0
