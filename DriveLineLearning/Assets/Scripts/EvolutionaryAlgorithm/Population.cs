@@ -9,7 +9,7 @@ public class Population : MonoBehaviour
     public int INITIAL_WEIGHTS_UPPER_BOUND = 100;
 
     // Car objects - Population
-    public List<GameObjects> CarPopulation = new List<GameObjects>();
+    public List<GameObject> CarPopulation = new List<GameObject>();
     
     // Individuals of the population's fitness
     private List<float> Fitness = new List<float>();
@@ -18,18 +18,18 @@ public class Population : MonoBehaviour
     List<List<float[]>> velocityVectors = new List<List<float[]>>();
 
     // Stored Personal Best of each individual 
-    List<List<float[]>> personalBestDNA = new List<List<float[]>>();
+    List<List<float[]>> personalBestWeights = new List<List<float[]>>();
 
-    // Stored Global Best DNA and fitness achieved
-    List<float[]> GlobalBestDNA = new List<float[]>();
+    // Stored Global Best Weights and fitness achieved
+    List<float[]> GlobalBestWeights = new List<float[]>();
     float GlobalBestFitness;
 
     // Links to used Game Objects
     public GameObject NeuralNetworkControlledCar;
     public GameObject StartingBlocks;
 
-    // DNA (vector dimensions) based on car's NN structure
-    private List<int> DNA_template_dimensions;
+    // Weights (vector dimensions) based on car's NN structure
+    private List<int> Weights_template_dimensions;
 
     // 
     private Random random;
@@ -40,10 +40,10 @@ public class Population : MonoBehaviour
         random = new Random();
 
         // Get "chromosome structure" from NeuralNetwork structure
-        List<float[]> DNA_Template = NeuralNetworkControlledCar.GetComponent<NeuralNetwork>().weights;
-        foreach(float[] cur in DNA_Template)
+        List<float[]> Weights_Template = NeuralNetworkControlledCar.GetComponent<NeuralNetwork>().weights;
+        foreach(float[] cur in Weights_Template)
         {
-            DNA_Template.Add(cur.Length);
+            Weights_Template.Add(cur.Length);
         }
 
 
@@ -63,8 +63,30 @@ public class Population : MonoBehaviour
 
     }
 
-    // Generate Randomly Initialised DNA
-    private List<float[]> GenerateRandomlyInitializedDNA()
+    private void PositionCarAtStartLine(int carIndex)
+    {
+        StartingBlocks.transform.find
+    }
+    
+    
+    private List<float[]> CloneOfWeights(List<float[]> weightsToClone)
+    {
+        List<float[]> newClone = new List<float[]>();
+        foreach (float[] cur in weightsToClone)
+        {
+            float[] newClone = new float[cur.Length];
+            for (int x = 0, length = cur.Length; x < length; x++)
+            {
+                newClone[x] = cur[x];
+            }
+            newCopy.Add(newClone);
+        }
+
+        return newClone;
+    }
+
+    // Generate Randomly Initialised Weights
+    private List<float[]> GenerateRandomlyInitializedWeights()
     {
 
         //initialization call
@@ -72,7 +94,7 @@ public class Population : MonoBehaviour
     }
 
     // Calculate fitness for a given car
-    private float CalculateFitnessForCarIndex(int index)
+    private float CalculateFitness(int carIndex)
     {
         // Get Distance car travelled
         // using: float dist = car.GetComponent<DistanceTracker>().distanceTravelled;
