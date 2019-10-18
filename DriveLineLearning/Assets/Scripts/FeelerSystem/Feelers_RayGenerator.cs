@@ -7,7 +7,7 @@ public class Feelers_RayGenerator : MonoBehaviour
 { 
     public float[] feelerDists = new float[5];
     public float fieldOfView = 120;
-    private float feelerLength = 8;
+    public float feelerLength = 30;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +20,7 @@ public class Feelers_RayGenerator : MonoBehaviour
     {
         for (int i = 0; i < feelerDists.Length; i++)
         {
-            feelerDists[i] = getDistInDir(-fieldOfView / 2 + i * fieldOfView / (feelerDists.Length - 1));
+            feelerDists[i] = feelerLength - getDistInDir(-fieldOfView / 2 + i * fieldOfView / (feelerDists.Length - 1));
         }
     }
     float getDistInDir(float angleDeg)
@@ -40,7 +40,7 @@ public class Feelers_RayGenerator : MonoBehaviour
         else
         {
             Debug.DrawRay(transform.position, directionVector * feelerLength, Color.blue);
-            dist = -1;
+            dist = feelerLength;
         }
         return dist;
     }
