@@ -13,7 +13,7 @@ public class NeuralNetwork : MonoBehaviour
     // Neural Network parameters
     public int hidddenLayers = 1;
     public int hLayer_size = 5;
-    public int outputs = 1;
+    public int outputs = 2;
     public int inputs = 5;
     public float maxValue = 1f;
 
