@@ -882,6 +882,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpeedText: {fileID: 1053571360}
+  speed2: 0
+  car: {fileID: 478227596}
 --- !u!1 &527570687
 GameObject:
   m_ObjectHideFlags: 0
@@ -1577,18 +1579,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e677dc2d1113c4f5f8bdacd427a04796, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TimerText: {fileID: 0}
-  startTime: 0
 --- !u!114 &968592976
 MonoBehaviour:
   m_ObjectHideFlags: 0
