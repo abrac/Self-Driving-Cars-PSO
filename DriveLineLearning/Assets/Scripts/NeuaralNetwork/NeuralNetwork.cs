@@ -1,9 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
+using UnityStandardAssets.Vehicles.Car;
 
 public class NeuralNetwork : MonoBehaviour
 {
+    //[RequireComponent(typeof(CarController))]
+
+    private CarController m_Car; // the car controller we want to use
+
     // Neural Network parameters
     public int hidddenLayers = 1;
     public int hLayer_size = 5;
@@ -15,7 +21,7 @@ public class NeuralNetwork : MonoBehaviour
     private const float euler = 2.71828f;
 
     // List of neuron outputs and weights
-    private List<List<float>> neurons { get; set; }
+    public List<List<float>> neurons { get; set; }
     private List<float[][]> weights { get; set; }
 
     private int layers;
@@ -52,6 +58,21 @@ public class NeuralNetwork : MonoBehaviour
             }
             neurons.Add(layer);
         }
+    }
+
+    private void Awake()
+    {
+        // get the car controller
+        m_Car = GetComponent<CarController>();
+    }
+
+    private void FixedUpdate()
+    {
+        Feedforward(new float[] { 1, 1, 1, 1, 1 });
+        // pass the input to the car!
+        float h = getOutputs()[0];
+        float v = getOutputs()[1];
+        m_Car.Move(h, v, v, 0f);
     }
 
     public void ChangeWeights(List<float[][]> weights)
