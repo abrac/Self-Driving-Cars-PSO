@@ -2747,6 +2747,26 @@ PrefabInstance:
       propertyPath: TimerText
       value: 
       objectReference: {fileID: 552897255}
+    - target: {fileID: 2092934822, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 75.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2092934821, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2092934824, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2092934824, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: m_ReflectionProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2092934824, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
 --- !u!1 &1602497033
