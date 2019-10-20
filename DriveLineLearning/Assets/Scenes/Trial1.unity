@@ -1107,6 +1107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimerText: {fileID: 552897255}
+  timeElapsedInSec: 0
 --- !u!114 &552897255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1267,6 +1268,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4907bcb48afe03a4db1858438e4a37c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  POPULATION_SIZE: 50
+  INITIAL_WEIGHTS_UPPER_BOUND: 100
+  MAX_GENERATIONS: 1000
+  CarPopulation: []
+  NeuralNetworkControlledCar: {fileID: 4364079860770384708, guid: 42499a7bc787ba24bb426d0854ab07e4,
+    type: 3}
+  StartingBlocks: {fileID: 207017961}
 --- !u!4 &662064300
 Transform:
   m_ObjectHideFlags: 0
