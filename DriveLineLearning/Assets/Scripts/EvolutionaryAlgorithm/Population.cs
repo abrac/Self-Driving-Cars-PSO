@@ -16,7 +16,7 @@ public class Population : MonoBehaviour
     //private List<float> Fitness = new List<float>();
 
     // Stored velocity of each individual 
-    List<List<float[]>> velocityVectors = new List<List<float[]>>();
+    List<float[][]> velocityVectors = new List<float[][]>();
 
     // Stored Personal Best of each individual 
     List<List<float[]>> personalBestWeights = new List<List<float[]>>();
@@ -81,7 +81,7 @@ public class Population : MonoBehaviour
         //      2.1. Disable Car.
         //      2.2. Evaluate fitness.
         //      2.3. Store fitness and weights in personalBestWeights (if applicable)
-        //      2.4. Store finess and weights in globalBestWeights (if applicable)
+        //      2.4. Store fitness and weights in globalBestWeights (if applicable)
         // 3. If all cars have collided (when collisionCounter = popSize):
         //      3.1. Update all the particle "positions" (i.e. weights) and particle "velocities"
         //      3.2. start a new generation by moving all cars to the startPosition
