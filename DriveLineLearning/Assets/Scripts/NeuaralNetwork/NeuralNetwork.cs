@@ -14,17 +14,21 @@ public class NeuralNetwork : MonoBehaviour
     public int hidddenLayers = 1;
     public int hLayer_size = 5;
     public int outputs = 2;
-    public int inputs = 5;
+    public int inputs =0;
     public float maxValue = 1f;
+    
 
     // List of neuron outputs and weights
     public List<List<float>> neurons;
     private List<float[][]> weights;
 
     private int layers;
-
+    int size = 0;
     void Start()
     {
+        Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
+        size = feelerNum.feelerDists.GetLength(0);
+        inputs = size + 2;
         layers = hidddenLayers + 2; // total layers including input and output layers
         weights = new List<float[][]>(); //weight initialisation
         neurons = new List<List<float>>();
@@ -68,8 +72,7 @@ public class NeuralNetwork : MonoBehaviour
     {
         CarController car = this.GetComponent<CarController>();
      Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
-        int size = feelerNum.feelerDists.GetLength(0);
-     
+       
         float[] inputs = new float[size +2]; // initialised size of inputs as the num of feelers + 2 vars(speed and angle)
         for (int i = 0; i < inputs.GetLength(0)-2; i++)
         {
