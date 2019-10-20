@@ -11,7 +11,7 @@ public class NeuralNetwork : MonoBehaviour
     private CarController m_Car; // the car controller we want to use
 
     // Neural Network parameters
-    public int hidddenLayers = 1;
+    public int hiddenLayers = 1;
     public int hLayer_size = 5;
     public int outputs = 2;
     public int inputs = 5;
@@ -19,13 +19,13 @@ public class NeuralNetwork : MonoBehaviour
 
     // List of neuron outputs and weights
     public List<List<float>> neurons;
-    private List<float[][]> weights;
+    public List<float[][]> weights { get; set; }
 
     private int layers;
 
     void Start()
     {
-        layers = hidddenLayers + 2; // total layers including input and output layers
+        layers = hiddenLayers + 2; // total layers including input and output layers
         weights = new List<float[][]>(); //weight initialisation
         neurons = new List<List<float>>();
 
@@ -35,7 +35,7 @@ public class NeuralNetwork : MonoBehaviour
             float[][] layerWeights;
             List<float> layer = new List<float>();
             int layerSize = getSizeLayer(i);
-            if(i != hidddenLayers+1)
+            if(i != hiddenLayers + 1) // checking that not the last layer (it is + 1, rather than + 2 because i is zero-based)
             {
                 layerWeights = new float[layerSize][];
                 int nextSize = getSizeLayer(i + 1); // size of the next layer
@@ -49,7 +49,7 @@ public class NeuralNetwork : MonoBehaviour
                 }
                 weights.Add(layerWeights);
             }
-            //What is this for?
+            //What is this for? Geoff = Think it stores the Neuron's value (Input/lastestResultantFNet)
             for (int j = 0; j < layerSize; j++)
             {
                 layer.Add(0);
@@ -73,10 +73,10 @@ public class NeuralNetwork : MonoBehaviour
         m_Car.Move(h, v, v, 0f);
     }
 
-    public void ChangeWeights(List<float[][]> weights)
+    /*public void ChangeWeights(List<float[][]> weights)
     {
         this.weights = weights;
-    }
+    }*/
 
     public void Feedforward(float [] inputs)
     {
@@ -91,7 +91,7 @@ public class NeuralNetwork : MonoBehaviour
         // Update neuron values in layers 1 to output layer
         for (int j = 0; j <neurons.Count-1; j++)
         {
-            // Create reference to weigths of layer j
+            // Create reference to weights of layer j
             float[][] weightsLayer = weights[j];
             // value to keep track of the next layer
             int nLayer = j + 1;
@@ -137,13 +137,13 @@ public class NeuralNetwork : MonoBehaviour
         if (i == 0)
             size = inputs;
 
-        else if (i == hidddenLayers + 1)
+        else if (i == hiddenLayers + 1)
         {
             size = outputs;
         }
 
         else
-            size = hidddenLayers;
+            size = hiddenLayers;
 
         return size;
 
