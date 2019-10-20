@@ -75,7 +75,18 @@ public class Population : MonoBehaviour
 
     void Update()
     {
-
+        // Steps:
+        //  1. Check for collision triggers.
+        //  2. If a collision happened:
+        //      2.1. Disable Car.
+        //      2.2. Evaluate fitness.
+        //      2.3. Store fitness and weights in personalBestWeights (if applicable)
+        //      2.4. Store finess and weights in globalBestWeights (if applicable)
+        // 3. If all cars have collided (when collisionCounter = popSize):
+        //      3.1. Update all the particle "positions" (i.e. weights) and particle "velocities"
+        //      3.2. start a new generation by moving all cars to the startPosition
+        //      3.3. Enable Car.
+        // 4. If stopping conditions are met: stop, and save weights and other data to csv file.
     }
 
     private void PositionCarAtStartLine(GameObject car)
