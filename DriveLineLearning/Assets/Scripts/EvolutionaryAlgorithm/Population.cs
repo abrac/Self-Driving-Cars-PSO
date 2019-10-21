@@ -6,24 +6,30 @@ public class Population : MonoBehaviour
 {
     // Parameters
     public int POPULATION_SIZE = 50;
-    public int INITIAL_WEIGHTS_UPPER_BOUND = 100;
+    public int INITIAL_WEIGHTS_UPPER_BOUND = 1;
     public int MAX_GENERATIONS = 1000;
+    static int BEST_INDIVIDUAL_STREAK = 70;
 
     // Car objects - Population
     public List<GameObject> CarPopulation = new List<GameObject>();
     
     // Individuals of the population's fitness
-    //private List<float> Fitness = new List<float>();
+    private List<float> CurrentNN_Fitness = new List<float>();
 
-    // Stored velocity of each individual 
-    List<float[][]> velocityVectors = new List<float[][]>();
+    // Stored velocity of each individual particle 
+    private List<List<float[][]>> ParticleVelocityVectors = new List<List<float[][]>>();
 
     // Stored Personal Best of each individual 
-    List<List<float[]>> personalBestWeights = new List<List<float[]>>();
+    private List<List<float[][]>> PersonalBestNN_Weights = new List<List<float[][]>>();
+    private List<float> PersonalBestNN_Fitness = new List<float>();
+
+    // Stored y-Hat of each individual (using Ring topology)
+    private List<List<float[][]>> Y_HatNN_Weights = new List<List<float[][]>>();
+    private List<float> Y_HatNN_Fitness = new List<float>();
 
     // Stored Global Best Weights and fitness achieved
-    List<float[]> GlobalBestWeights = new List<float[]>();
-    //float GlobalBestFitness;
+    private List<float[][]> GlobalBestWeights = new List<float[][]>();
+    private float GlobalBestNN_Fitness;
 
     // Links to used Game Objects
     public GameObject NeuralNetworkControlledCar;
@@ -32,17 +38,29 @@ public class Population : MonoBehaviour
     private Quaternion CarStartingRotation;
 
     // Weights (vector dimensions) based on car's NN structure in the form: List index = layer; int[2] with { totalfromN,s, totalToN,s };
-    private List<int[]> Weights_template_dimensions; // + one array of size 1 added (to Store the fitness)
+    private List<int[]> Weights_template_dimensions; // IGNORE->: + one array of size 1 added (to Store the fitness)
 
-    // 
-    private Random random;
+    // PSO parameters
+    public double cognitiveConst = 0.7;
+    public double socialConst = 1.0;
+    public double w = 0.6;
+    public double socialRandom;
+    public double cognitiveRandom;
+
+    // Other variables
     private int curGeneration;
+    private int leadCounter;
+    private int numberCarsDriving;
 
 
     // Create genes(weights) property and instantiate and position cars
     void Start()
     {
-        random = new Random();
+        // Initialize some variables
+        curGeneration = 0;
+        leadCounter = 0;
+        numberCarsDriving = POPULATION_SIZE;
+
         // Find and store reference to Starting Block where to initialize the cars
         Transform startPosition = StartingBlocks.transform.Find("Start Position Solo");
         CarStartingRotation = startPosition.rotation;
@@ -54,11 +72,9 @@ public class Population : MonoBehaviour
         {
             Weights_template_dimensions.Add(new int[] {cur.Length, cur[0].Length});
         }
-        Weights_template_dimensions.Add(new int[] {0}); // Stores fitness of this configuration
+        //Weights_template_dimensions.Add(new int[] {0}); // Stores fitness of this configuration
 
-
-
-        //Create genes array representing weights of NN, and initialize with random NN wieghts.
+        // Create genes array representing weights of NN, and initialize with random NN weights.
         for (int x = 0; x < POPULATION_SIZE; x++)
         {
             GameObject newCar = GameObject.Instantiate(NeuralNetworkControlledCar);
@@ -69,16 +85,176 @@ public class Population : MonoBehaviour
             CarPopulation.Add(newCar);
         }
 
+        //Initialize Velocity Vectors to Zero
+        ParticleVelocityVectors = new List<List<float[][]>>();
+        for (int x = 0; x < POPULATION_SIZE; x ++) {
+            ParticleVelocityVectors.Add(InitializeParticleVelocityToZero());
+        }
+
         // Can't evaluate fitness until raced at least once...
         // So can build that in on Update() 
     }
 
     void Update()
     {
+        // Still part of setup - run initialised cars once to get initial fitness
+        if (curGeneration == 0)
+        {
+            // If no cars are still driving
+            if (numberCarsDriving == 0)
+            {
+                // Note: Have fitness calculated by each car as it crashes. Have a method that the car calls to decrease NumberCarsDriving by 1.
+                // Initialize Personal bests (weights and fitness)
+                PersonalBestNN_Fitness = new List<float>();
+                PersonalBestNN_Weights = new List<List<float[][]>>();
+                InitializeParticlePersonalBests(); // to the weights currently in the car and the resultant fitness
+                
+                // Initialize "Global" bests (y-hat) All-best and Ring topology (Based on Personal bests initially - then subsequently on Y-Hats)
+                GlobalBestNN_Fitness = 0;
+                GlobalBestWeights = new List<float[][]>();
+                Y_HatNN_Fitness = new List<float>();
+                Y_HatNN_Weights = new List<List<float[][]>>();
+                UpdateGlobalAndY_HatRingTopologyBestVectors(true);
+            }
+            // reset test cycle - new generation
+
+
+            curGeneration++;
+            // Set cars to be driving again
+            // ...here...
+        }
+        // Start of evolutionary cycles
+        else if (curGeneration <= MAX_GENERATIONS && leadCounter < BEST_INDIVIDUAL_STREAK)
+        {
+            // If no cars are still driving
+            if (numberCarsDriving == 0)
+            {
+                // have fitness calc in each car as it crashes. have a method that the car calls to decrease NumberCarsDriving by 1.
+                // Fetch each car's latest NN fitness
+
+                for (int curIndividual = 0; curIndividual < POPULATION_SIZE; curIndividual++) 
+                {
+                    // Update personal best
+                    if (GetA_CarsNN_Fitness(curIndividual) > PersonalBestNN_Fitness[curIndividual]) 
+                    {
+                        PersonalBestNN_Fitness[curIndividual] = GetA_CarsNN_Fitness(curIndividual);
+                        PersonalBestNN_Weights[curIndividual] = CloneOfWeights(GetA_CarsNN_Weights(curIndividual));
+                    }
+                    // Update Ring Topology Best
+                    if (PersonalBestNN_Fitness[curIndividual] > Y_HatNN_Fitness[curIndividual]) 
+                    {
+                        Y_HatNN_Fitness[curIndividual] = PersonalBestNN_Fitness[curIndividual];
+                        Y_HatNN_Weights[curIndividual] = CloneOfWeights(PersonalBestNN_Weights[curIndividual]);
+                    }
+                    /*// Global Best // NOTE: Performed later in UpdateGlobalAndY_HatRingTopologyBestVectors(false);
+                    if (personalBests.get(curIndividual)[4] > globalBest[4]) 
+                    {
+                        globalBest = cloneArray(personalBests.get(curIndividual));
+                        leadCounter = 0;
+                    }*/
+                }
+
+                //Print Best Fitness
+                Debug.Log(GlobalBestNN_Fitness);
+
+                // Recalculate latest ring Y_Hats 
+                UpdateGlobalAndY_HatRingTopologyBestVectors(false);
+
+                // Calculate new velocity for each individual
+                for (int bob = 0; bob < CarPopulation.Count; bob++) 
+                {
+                    double[] bobIndividual = population.get(bob);
+                    double[] bobVelocity = velocityVectors.get(bob);
+                    double[] bobPersonalBest = personalBests.get(bob);
+                    double[] bobYHat = yHats.get(bob);
+                    // for each dimension of the Vectors
+                    for (int dimension = 0; dimension < bobVelocity.length; dimension++) 
+                    {
+                        double socialRandom = randomness.nextDouble();
+                        double cognitiveRandom = randomness.nextDouble();
+                        bobVelocity[dimension] = w*bobVelocity[dimension] + cognitiveConst*cognitiveRandom*(bobPersonalBest[dimension] - bobIndividual[dimension]) + socialConst*socialRandom*(bobYHat[dimension] - bobIndividual[dimension]);
+                    }
+
+                    // Apply new velocity to Particle
+                    for (int dimension = 0; dimension < bobVelocity.length; dimension++) 
+                    {
+                        bobIndividual[dimension] = Math.abs(bobIndividual[dimension] + bobVelocity[dimension]);
+                    }
+
+                    List<double[]> toCheckFitness = new ArrayList<>();
+                    toCheckFitness.add(bobIndividual);
+                    CalcFitnessValuesForPopulation(toCheckFitness);
+                }
+                leadCounter++;
+                gen++;
+            }
+            Debug.Log("PSO SOLUTION: Final fitness: " + GlobalBestNN_Fitness);
+
+
+
+        }
+        else 
+        {
+            //Solution is reached..
+            //Save BEST Global Weights to a new text file: or put them in one car and let it race
+        }
+
+        
+
+
+        // Start evolution
+        while (gen <= MAX_GENERATIONS && leadCounter < BEST_INDIVIDUAL_STREAK)
+        {
+            
+
+            //Print Best SSE
+            System.out.println(globalBest[4]);
+
+
+            // Broadcast new ring yHats again
+            CalculateAndSetBestVectorRingTopology(yHats,false);
+
+            double cognitiveConst = 0.7;
+            double socialConst = 1.0;
+            double w = 0.6;
+            //double socialRandom = randomness.nextDouble();
+            //double cognitiveRandom = randomness.nextDouble();
+            Random randomness = new Random();
+
+            // Calculate new velocity
+            for (int bob = 0; bob < population.size(); bob++) 
+            {
+                double[] bobIndividual = population.get(bob);
+                double[] bobVelocity = velocityVectors.get(bob);
+                double[] bobPersonalBest = personalBests.get(bob);
+                double[] bobYHat = yHats.get(bob);
+                // for each dimension of the Vectors
+                for (int dimension = 0; dimension < bobVelocity.length; dimension++) 
+                {
+                    double socialRandom = randomness.nextDouble();
+                    double cognitiveRandom = randomness.nextDouble();
+                    bobVelocity[dimension] = w*bobVelocity[dimension] + cognitiveConst*cognitiveRandom*(bobPersonalBest[dimension] - bobIndividual[dimension]) + socialConst*socialRandom*(bobYHat[dimension] - bobIndividual[dimension]);
+                }
+
+                // Apply new velocity to Particle
+                for (int dimension = 0; dimension < bobVelocity.length; dimension++) 
+                {
+                    bobIndividual[dimension] = Math.abs(bobIndividual[dimension] + bobVelocity[dimension]);
+                }
+
+                List<double[]> toCheckFitness = new ArrayList<>();
+                toCheckFitness.add(bobIndividual);
+                CalcFitnessValuesForPopulation(toCheckFitness);
+            }
+            leadCounter++;
+            gen++;
+        }
+        System.out.println("PSO SOLUTION: A: " + globalBest[0] + ", U: " + globalBest[1] + ", D: " + globalBest[2] + ", P: " + globalBest[3] + ", Profit: " + globalBest[4]);
+
         // Steps:
         //  1. Check for collision triggers.
         //  2. If a collision happened:
-        //      2.1. Disable Car.
+        //      2.1. Disable Car. (Geoff: Car or Car's NN? suppose doesnt matter)
         //      2.2. Evaluate fitness.
         //      2.3. Store fitness and weights in personalBestWeights (if applicable)
         //      2.4. Store fitness and weights in globalBestWeights (if applicable)
@@ -134,12 +310,41 @@ public class Population : MonoBehaviour
             }
             newRandomizedWeights.Add(newLayerWeights);
         }
-        return newRandomizedWeights;
-
-        
+        return newRandomizedWeights;  
     }
 
-    // Calculate fitness for a given car
+    // Initialise Particle velocity to zero
+    private List<float[][]> InitializeParticleVelocityToZero()
+    {
+        List<float[][]> magnitudes = new List<float[][]>();
+        foreach (int[] cur in Weights_template_dimensions)
+        {
+            float[][] newLayerMagnitudes = new float[cur[0]][];
+            for (int x = 0; x < cur[0]; x++)
+            {
+                for (int y = 0; y < cur[1]; y++)
+                {   
+                    newLayerMagnitudes[x][y] = 0;
+                }
+            }
+            magnitudes.Add(newLayerMagnitudes);
+        }
+        return magnitudes;  
+    }
+
+    // Initialize Particle personal best weights to the weights currently in the car
+    private void InitializeParticlePersonalBests()
+    {
+        for (int x = 0; x < CarPopulation.Count; x++) 
+        {
+            PersonalBestNN_Weights.Add(GetA_CarsNN_Weights(x));
+            PersonalBestNN_Fitness.Add(GetA_CarsNN_Fitness(x));
+        } 
+    }
+    
+
+    // This will move to the CAR object 
+    /*// Calculate fitness for a given car
     private float CalculateFitnessTheWeightsAchieved(GameObject car)
     {
         // Get Distance car travelled
@@ -150,10 +355,113 @@ public class Population : MonoBehaviour
 
         // some funtion to combine them
         return dist/timeElapsed;
+    }*/
+
+    private void UpdateGlobalAndY_HatRingTopologyBestVectors(bool initilizationStep = false) 
+    {
+        List<List<float[][]>> originWeights = Y_HatNN_Weights;
+        List<float> originFitness = Y_HatNN_Fitness;
+        // If before first generation, get best of neighbour's personal bests instead
+        if (initilizationStep) 
+        {
+            originWeights = PersonalBestNN_Weights;
+            originFitness = PersonalBestNN_Fitness;
+        }
+
+        int indexOfGlobalFittest = 0;
+        for (int index = 0; index < POPULATION_SIZE; index ++) 
+        {
+            //get the three linked individuals
+            int[] indices = new int[] { ((((index - 1) % POPULATION_SIZE) + POPULATION_SIZE) % POPULATION_SIZE), index, ((((index + 1) % POPULATION_SIZE) + POPULATION_SIZE) % POPULATION_SIZE) };
+            
+            // get the fittest of the three
+            int indexOfRingY_HatFittest = GetIndexOfFittest(originFitness, indices);
+
+            // check if global fitness has been beaten, if so, replace with new best
+            if (originFitness[indexOfGlobalFittest] < originFitness[indexOfRingY_HatFittest])
+            {
+                indexOfGlobalFittest = indexOfRingY_HatFittest;
+                // Reset LeadCounter
+                leadCounter = 0;
+            }
+
+            // Update the Y_Hat values
+            if (!initilizationStep) {
+                Y_HatNN_Fitness[indexOfRingY_HatFittest] = originFitness[indexOfRingY_HatFittest];
+                Y_HatNN_Weights[indexOfRingY_HatFittest] = CloneOfWeights(originWeights[indexOfRingY_HatFittest]);
+            }
+            else
+            {
+                Y_HatNN_Fitness.Add(originFitness[indexOfRingY_HatFittest]);
+                Y_HatNN_Weights.Add(CloneOfWeights(originWeights[indexOfRingY_HatFittest]));
+            }
+        }
+        // Update the global best weights
+        GlobalBestNN_Fitness = originFitness[indexOfGlobalFittest];
+        GlobalBestWeights = CloneOfWeights(originWeights[indexOfGlobalFittest]);
+    }
+
+    private int GetIndexOfFittest(List<float> theFitnessValues, int[] subsetIndices = null) 
+    {
+        int indexOfFittest = -1;
+        if (subsetIndices == null || subsetIndices.Length == 0) 
+        {
+            //Debug.LogError("Please implement GetIndexOfFittest() for the full population");
+            indexOfFittest = 0;
+            float fitnessOfCurFittest = theFitnessValues[indexOfFittest];
+            for (int x = 1; x < CarPopulation.Count; x++)
+            {
+                float fitnessOfCur = theFitnessValues[x];
+                if (fitnessOfCurFittest < fitnessOfCur)
+                {
+                    indexOfFittest = x;
+                    fitnessOfCurFittest = fitnessOfCur;
+                }
+            }
+        }
+        else 
+        {
+            indexOfFittest = subsetIndices[0];
+            float fitnessOfCurFittest = theFitnessValues[indexOfFittest];
+            for (int x = 1; x < subsetIndices.Length; x++)
+            {
+                float fitnessOfCur = theFitnessValues[subsetIndices[x]];
+                if (fitnessOfCurFittest < fitnessOfCur)
+                {
+                    indexOfFittest = subsetIndices[x];
+                    fitnessOfCurFittest = fitnessOfCur;
+                }
+            }
+        }
+        return indexOfFittest;
+    }
+
+    private List<float[][]> GetA_CarsNN_Weights(int carIndex) 
+    {
+        if (carIndex < CarPopulation.Count)
+        {
+            return CloneOfWeights(CarPopulation[carIndex].GetComponent<NeuralNetwork>().weights);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private float GetA_CarsNN_Fitness(int carIndex) 
+    {
+        if (carIndex < CarPopulation.Count)
+        {
+            return CarPopulation[carIndex].GetComponent<someScriptOnCarCollision>().fitness;
+        }
+        else
+        {
+            return 0;
+        }
     }
 }
 
-/* Geoff's JAVA PSO Code 
+/* Geoff's JAVA  DE and PSO Code 
 // COMMON PARAM
     static List<double[]> population = new ArrayList<>(); //List<double[5]> == 4 alloy amounts & fitness score
     static final int POP_SIZE = 100;
@@ -425,16 +733,5 @@ public class Population : MonoBehaviour
             return false;
 
     }
-
-
-
-
-
-
 }
-
-
-
-
-
 */
