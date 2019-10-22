@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Vehicles.Car;
 
-public class Population : MonoBehaviour
+public class PopulationManager : MonoBehaviour
 {
     // Parameters
     public int POPULATION_SIZE = 10;
@@ -11,9 +11,9 @@ public class Population : MonoBehaviour
     public int MAX_GENERATIONS = 1000;
     static int BEST_INDIVIDUAL_STREAK = 70;
 
-    // Car objects - Population
-    public List<GameObject> CarPopulation = new List<GameObject>();
-    
+    // The car population script Component
+    public CarPopulation cars;
+
     // Individuals of the population's fitness
     private List<float> CurrentNN_Fitness = new List<float>();
 
@@ -33,10 +33,7 @@ public class Population : MonoBehaviour
     private float GlobalBestNN_Fitness;
 
     // Links to used Game Objects
-    public GameObject NeuralNetworkControlledCar;
-    public GameObject StartingBlocks;
-    private Vector3 CarStartingPosition;
-    private Quaternion CarStartingRotation;
+    
 
     // Weights (vector dimensions) based on car's NN structure in the form: List index = layer; int[2] with { totalfromN,s, totalToN,s };
     //private List<int[]> Weights_template_dimensions; // IGNORE->: + one array of size 1 added (to Store the fitness)
@@ -63,16 +60,7 @@ public class Population : MonoBehaviour
         leadCounter = 0;
         numberCarsDriving = POPULATION_SIZE;
 
-        // Find and store reference to Starting Block where to initialize the cars
-        Transform startPosition = StartingBlocks.transform.Find("Start Position Solo");
-        CarStartingRotation = startPosition.rotation;
-        CarStartingPosition = startPosition.position;
-
-        // Instantiate the car population
-        for (int x = 0; x < POPULATION_SIZE; x++) 
-        {
-            CarPopulation.Add((GameObject)Instantiate(NeuralNetworkControlledCar, CarStartingPosition, CarStartingRotation));
-        }
+        
 
         // Get "chromosome structure" from NeuralNetwork structure
         /*List<float[][]> Weights_Template = NeuralNetworkControlledCar.GetComponent<NeuralNetwork>().weights;
@@ -109,12 +97,15 @@ public class Population : MonoBehaviour
         if (curGeneration == 0)
         {
             // If no cars are still driving
-            if (numberCarsDriving == 0)
+            if (numberCarsDriving <= 0)
             {
                 // Note: Have fitness calculated by each car as it crashes. Have a method that the car calls to decrease NumberCarsDriving by 1.
                 // Initialize Personal bests (weights and fitness)
                 PersonalBestNN_Fitness = new List<float>();
                 PersonalBestNN_Weights = new List<List<float[][]>>();
+                curGeneration++;
+                numberCarsDriving = POPULATION_SIZE;
+                EnableAllTheCarsNNs();
                 InitializeParticlePersonalBests(); // to the weights currently in the car and the resultant fitness
                 
                 // Initialize "Global" bests (y-hat) All-best and Ring topology (Based on Personal bests initially - then subsequently on Y-Hats)
@@ -125,7 +116,7 @@ public class Population : MonoBehaviour
                 UpdateGlobalAndY_HatRingTopologyBestVectors(true);
             
                 // reset test cycle - new generation
-                foreach (GameObject car in CarPopulation)
+                foreach (GameObject car in cars.carPopulation)
                 {
                     PositionCarAtStartLine(car);
                 }
@@ -174,7 +165,7 @@ public class Population : MonoBehaviour
                 UpdateGlobalAndY_HatRingTopologyBestVectors(false);
 
                 // Calculate new velocity for each individual
-                for (int bob = 0; bob < CarPopulation.Count; bob++) 
+                for (int bob = 0; bob < cars.carPopulation.Count; bob++) 
                 {
                     List<float[][]> bobIndividual = GetA_CarsNN_Weights(bob);
                     List<float[][]> bobVelocity = ParticleVelocityVectors[bob];
@@ -207,11 +198,11 @@ public class Population : MonoBehaviour
                     }
 
                     // Place new Gen weights back in the car
-                    CarPopulation[bob].GetComponent<NeuralNetwork>().weights = bobIndividual;
+                    cars.carPopulation[bob].GetComponent<NeuralNetwork>().weights = bobIndividual;
                 }
 
                 // reset test cycle - new generation
-                foreach (GameObject car in CarPopulation)
+                foreach (GameObject car in cars.carPopulation)
                 {
                     PositionCarAtStartLine(car);
                 }
@@ -251,8 +242,8 @@ public class Population : MonoBehaviour
         /*Rigidbody carsRigidbody = car.GetComponent<Rigidbody>();
         carsRigidbody.velocity = Vector3.zero;
         carsRigidbody.angularVelocity = Vector3.zero;*/
-        car.transform.position = CarStartingPosition;
-        car.transform.rotation = CarStartingRotation;  
+        car.transform.position = cars.CarStartingPosition;
+        car.transform.rotation = cars.CarStartingRotation;  
         //this.gameObject.GetComponent<Timer>().ResetTimer();  
     }
     
@@ -303,7 +294,7 @@ public class Population : MonoBehaviour
     // Initialise Particle velocity to zero
     private List<float[][]> InitializeParticleVelocityToZero()
     {
-        List<float[][]> magnitudes = CloneOfWeights(CarPopulation[0].GetComponent<NeuralNetwork>().weights);
+        List<float[][]> magnitudes = CloneOfWeights(cars.carPopulation[0].GetComponent<NeuralNetwork>().weights);
         foreach (float[][] cur in magnitudes)
         {
             for (int x = 0; x < cur.Length; x++)
@@ -334,7 +325,7 @@ public class Population : MonoBehaviour
     // Initialize Particle personal best weights to the weights currently in the car
     private void InitializeParticlePersonalBests()
     {
-        for (int x = 0; x < CarPopulation.Count; x++) 
+        for (int x = 0; x < cars.carPopulation.Count; x++) 
         {
             PersonalBestNN_Weights.Add(GetA_CarsNN_Weights(x));
             PersonalBestNN_Fitness.Add(GetA_CarsNN_Fitness(x));
@@ -344,9 +335,9 @@ public class Population : MonoBehaviour
     // Switch the cars' NNs back on
     private void EnableAllTheCarsNNs/*AndResetTimer*/()
     {
-        for (int x = 0; x < CarPopulation.Count; x++) 
+        for (int x = 0; x < cars.carPopulation.Count; x++) 
         {
-            CarPopulation[x].GetComponent<NeuralNetwork>().WakeUp();
+            cars.carPopulation[x].GetComponent<NeuralNetwork>().WakeUp();
         }
         //this.gameObject.GetComponent<Timer>().ResetTimer();
     }
@@ -418,7 +409,7 @@ public class Population : MonoBehaviour
             //Debug.LogError("Please implement GetIndexOfFittest() for the full population");
             indexOfFittest = 0;
             float fitnessOfCurFittest = theFitnessValues[indexOfFittest];
-            for (int x = 1; x < CarPopulation.Count; x++)
+            for (int x = 1; x < cars.carPopulation.Count; x++)
             {
                 float fitnessOfCur = theFitnessValues[x];
                 if (fitnessOfCurFittest < fitnessOfCur)
@@ -447,9 +438,9 @@ public class Population : MonoBehaviour
 
     private List<float[][]> GetA_CarsNN_Weights(int carIndex) 
     {
-        if (carIndex < CarPopulation.Count)
+        if (carIndex < cars.carPopulation.Count)
         {
-            return CloneOfWeights(CarPopulation[carIndex].GetComponent<NeuralNetwork>().weights);
+            return CloneOfWeights(cars.carPopulation[carIndex].GetComponent<NeuralNetwork>().weights);
         }
         else
         {
@@ -459,9 +450,9 @@ public class Population : MonoBehaviour
 
     private float GetA_CarsNN_Fitness(int carIndex) 
     {
-        if (carIndex < CarPopulation.Count)
+        if (carIndex < cars.carPopulation.Count)
         {
-            return CarPopulation[carIndex].GetComponent<CarSideEvolutionaryBehaviour>().fitness;
+            return cars.carPopulation[carIndex].GetComponent<CarSideEvolutionaryBehaviour>().fitness;
         }
         else
         {

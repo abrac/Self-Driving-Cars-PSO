@@ -26,9 +26,9 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
     private void OnCollisionEnter(Collision other) {
         GameObject car = this.gameObject;
         car.GetComponent<NeuralNetwork>().Sleep();
-        evolutionManager.GetComponent<Population>().CallInAsCrashed();
+        evolutionManager.GetComponent<PopulationManager>().CallInAsCrashed();
         fitness = distanceTravelled/evolutionManager.GetComponent<Timer>().timeElapsedInSec;
         distanceTravelled = 0;
-        evolutionManager.GetComponent<Population>().PositionCarAtStartLine(car);
+        evolutionManager.GetComponent<PopulationManager>().PositionCarAtStartLine(car);
     }
 }

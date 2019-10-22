@@ -213,8 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ae6f7da4caf0cb4dbced62cbac898aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  evolutionManager: {fileID: 4403352777510472463, guid: 537d91ee1c93575479c972e3541e1869,
-    type: 3}
+  evolutionManager: {fileID: 0}
   distanceTravelled: 0
   fitness: 0
 --- !u!114 &6895490927502131506
