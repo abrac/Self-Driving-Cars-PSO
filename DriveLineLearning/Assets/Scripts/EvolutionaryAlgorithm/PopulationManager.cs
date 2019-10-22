@@ -103,8 +103,8 @@ public class PopulationManager : MonoBehaviour
                 // Initialize Personal bests (weights and fitness)
                 PersonalBestNN_Fitness = new List<float>();
                 PersonalBestNN_Weights = new List<List<float[][]>>();
-                curGeneration++;
-                numberCarsDriving = POPULATION_SIZE;
+                //curGeneration++;
+                //numberCarsDriving = POPULATION_SIZE;
                 InitializeParticlePersonalBests(); // to the weights currently in the car and the resultant fitness
                 
                 // Initialize "Global" bests (y-hat) All-best and Ring topology (Based on Personal bests initially - then subsequently on Y-Hats)

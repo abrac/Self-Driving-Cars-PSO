@@ -18,7 +18,7 @@ public class NeuralNetwork : MonoBehaviour
     public float maxValue = 1f;
     
 
-    private bool sleep = false;
+    public bool sleep = false;
 
     // List of neuron outputs and weights
     public List<List<float>> neurons;
