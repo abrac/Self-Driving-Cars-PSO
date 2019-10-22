@@ -26,8 +26,9 @@ public class NeuralNetwork : MonoBehaviour
 
     private int layers;
     int size = 0;
-    void Start()
+    void Awake()
     {
+        m_Car = GetComponent<CarController>();
         Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
         size = feelerNum.feelerDists.GetLength(0);
         inputs = size + 2;
@@ -62,12 +63,6 @@ public class NeuralNetwork : MonoBehaviour
             }
             neurons.Add(layer);
         }
-    }
-
-    private void Awake()
-    {
-        // get the car controller
-        m_Car = GetComponent<CarController>();
     }
  
     private void FixedUpdate()
@@ -181,7 +176,7 @@ public class NeuralNetwork : MonoBehaviour
         }
 
         else
-            size = hiddenLayers;
+            size = hLayer_size;
 
         return size;
 
