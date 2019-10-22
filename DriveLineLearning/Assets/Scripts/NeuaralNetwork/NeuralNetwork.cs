@@ -28,7 +28,7 @@ public class NeuralNetwork : MonoBehaviour
     {
         Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
         size = feelerNum.feelerDists.GetLength(0);
-        inputs = size + 2;
+        inputs = size +3; // bias included in input layer
         layers = hidddenLayers + 2; // total layers including input and output layers
         weights = new List<float[][]>(); //weight initialisation
         neurons = new List<List<float>>();
@@ -42,8 +42,8 @@ public class NeuralNetwork : MonoBehaviour
             if(i != hidddenLayers+1)
             {
                 layerWeights = new float[layerSize][];
-                int nextSize = getSizeLayer(i + 1); // size of the next layer
-                for (int j = 0; j < layerSize;  j++)
+                int nextSize = getSizeLayer(i + 1); // size of the next layer 
+                for (int j = 0; j < layerSize;  j++) 
                 {
                     layerWeights[j] = new float[nextSize];
                     for (int k = 0; k < nextSize; k++)
@@ -73,14 +73,16 @@ public class NeuralNetwork : MonoBehaviour
         CarController car = this.GetComponent<CarController>();
      Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
        
-        float[] inputs = new float[size +2]; // initialised size of inputs as the num of feelers + 2 vars(speed and angle)
-        for (int i = 0; i < inputs.GetLength(0)-2; i++)
+        float[] inputs = new float[size +3]; // initialised size of inputs as the num of feelers + 2 vars(speed and angle) and bias
+        for (int i = 0; i < inputs.GetLength(0)-3; i++)
         {
             inputs[i] = feelerNum.feelerDists[i];
         }
-        inputs[inputs.GetLength(0) - 2] = car.CurrentSpeed;
-        inputs[inputs.GetLength(0) - 1] = car.CurrentSteerAngle;
-       
+        inputs[inputs.GetLength(0) - 3] = car.CurrentSpeed;
+        inputs[inputs.GetLength(0) - 2] = car.CurrentSteerAngle;
+        inputs[inputs.GetLength(0) - 1] = -1;//bias value 
+
+
         Feedforward(inputs);
         // pass the input to the car!
         float h = getOutputs()[0];
