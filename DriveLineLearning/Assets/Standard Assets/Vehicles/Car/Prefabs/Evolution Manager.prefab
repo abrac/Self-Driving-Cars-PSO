@@ -46,10 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carPopulation: []
-  NeuralNetworkControlledCar: {fileID: 0}
+  NeuralNetworkControlledCar: {fileID: 4364079860770384708, guid: 42499a7bc787ba24bb426d0854ab07e4,
+    type: 3}
   StartingBlocks: {fileID: 0}
-  CarStartingPosition: {x: 0, y: 0, z: 0}
-  CarStartingRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &7889055724212137038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,13 +64,13 @@ MonoBehaviour:
   POPULATION_SIZE: 10
   INITIAL_WEIGHTS_UPPER_BOUND: 1
   MAX_GENERATIONS: 1000
-  cars: {fileID: 7889055724212137035}
   cognitiveConst: 0.7
   socialConst: 1
   w: 0.6
   socialRandom: 0
   cognitiveRandom: 0
-  numberCarsDriving: -320
+  curGeneration: 0
+  numberCarsDriving: 0
 --- !u!114 &7889055724212137032
 MonoBehaviour:
   m_ObjectHideFlags: 0

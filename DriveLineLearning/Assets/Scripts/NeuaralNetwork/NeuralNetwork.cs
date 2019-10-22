@@ -28,7 +28,7 @@ public class NeuralNetwork : MonoBehaviour
     int size = 0;
     void Awake()
     {
-        m_Car = GetComponent<CarController>();
+        m_Car = this.gameObject.GetComponent<CarController>();
         Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
         size = feelerNum.feelerDists.GetLength(0);
         inputs = size + 2;

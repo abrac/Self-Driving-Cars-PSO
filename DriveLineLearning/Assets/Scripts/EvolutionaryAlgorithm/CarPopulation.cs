@@ -14,7 +14,7 @@ public class CarPopulation : MonoBehaviour
     public Quaternion CarStartingRotation;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         // Find and store reference to Starting Block where to initialize the cars
         Transform startPosition = StartingBlocks.transform.Find("Start Position Solo");
