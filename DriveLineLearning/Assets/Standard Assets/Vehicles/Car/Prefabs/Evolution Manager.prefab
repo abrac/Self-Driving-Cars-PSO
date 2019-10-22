@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7889055724212137038}
   - component: {fileID: 7889055724212137032}
   m_Layer: 0
-  m_Name: Evolution Manager 1
+  m_Name: Evolution Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
