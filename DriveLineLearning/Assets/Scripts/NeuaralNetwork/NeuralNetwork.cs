@@ -17,6 +17,8 @@ public class NeuralNetwork : MonoBehaviour
     public int inputs = 5;
     public float maxValue = 1f;
 
+    private bool sleep = false;
+
     // List of neuron outputs and weights
     public List<List<float>> neurons;
     public List<float[][]> weights { get; set; }
@@ -66,11 +68,31 @@ public class NeuralNetwork : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Feedforward(new float[] { getRandom(), getRandom(), getRandom(), getRandom(), getRandom() });
-        // pass the input to the car!
-        float h = getOutputs()[0];
-        float v = getOutputs()[1];
-        m_Car.Move(h, v, v, 0f);
+        if (!sleep) 
+        {
+            Feedforward(new float[] { getRandom(), getRandom(), getRandom(), getRandom(), getRandom() });
+            // pass the input to the car!
+            float h = getOutputs()[0];
+            float v = getOutputs()[1];
+            m_Car.Move(h, v, v, 0f);
+        }
+        else
+        {
+            m_Car.Move(0, 0, 0, 0/*h, v, v, 0f*/);
+            m_Car.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            m_Car.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            m_Car.Move(0, 0, 0, 0/*h, v, v, 0f*/);
+        }
+    }
+
+    public void WakeUp()
+    {
+        sleep = false;
+    }
+
+    public void Sleep()
+    {
+        sleep = true;
     }
 
     /*public void ChangeWeights(List<float[][]> weights)

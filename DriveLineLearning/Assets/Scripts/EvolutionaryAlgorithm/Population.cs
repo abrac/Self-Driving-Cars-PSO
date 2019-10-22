@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Vehicles.Car;
 
 public class Population : MonoBehaviour
 {
     // Parameters
-    public int POPULATION_SIZE = 50;
+    public int POPULATION_SIZE = 10;
     public int INITIAL_WEIGHTS_UPPER_BOUND = 1;
     public int MAX_GENERATIONS = 1000;
     static int BEST_INDIVIDUAL_STREAK = 70;
@@ -38,7 +39,7 @@ public class Population : MonoBehaviour
     private Quaternion CarStartingRotation;
 
     // Weights (vector dimensions) based on car's NN structure in the form: List index = layer; int[2] with { totalfromN,s, totalToN,s };
-    private List<int[]> Weights_template_dimensions; // IGNORE->: + one array of size 1 added (to Store the fitness)
+    //private List<int[]> Weights_template_dimensions; // IGNORE->: + one array of size 1 added (to Store the fitness)
 
     // PSO parameters
     public float cognitiveConst = 0.7f;
@@ -50,6 +51,7 @@ public class Population : MonoBehaviour
     // Other variables
     private int curGeneration;
     private int leadCounter;
+    [SerializeField]
     private int numberCarsDriving;
 
 
@@ -66,8 +68,14 @@ public class Population : MonoBehaviour
         CarStartingRotation = startPosition.rotation;
         CarStartingPosition = startPosition.position;
 
+        // Instantiate the car population
+        for (int x = 0; x < POPULATION_SIZE; x++) 
+        {
+            CarPopulation.Add((GameObject)Instantiate(NeuralNetworkControlledCar, CarStartingPosition, CarStartingRotation));
+        }
+
         // Get "chromosome structure" from NeuralNetwork structure
-        List<float[][]> Weights_Template = NeuralNetworkControlledCar.GetComponent<NeuralNetwork>().weights;
+        /*List<float[][]> Weights_Template = NeuralNetworkControlledCar.GetComponent<NeuralNetwork>().weights;
         foreach(float[][] cur in Weights_Template)
         {
             Weights_template_dimensions.Add(new int[] {cur.Length, cur[0].Length});
@@ -83,7 +91,7 @@ public class Population : MonoBehaviour
             carsNN.weights = GenerateRandomlyInitializedWeights();
             // Add the car to the population
             CarPopulation.Add(newCar);
-        }
+        }*/
 
         //Initialize Velocity Vectors to Zero
         ParticleVelocityVectors = new List<List<float[][]>>();
@@ -125,6 +133,7 @@ public class Population : MonoBehaviour
                 numberCarsDriving = POPULATION_SIZE;
                 // Set cars to be driving again
                 // ...here... Generation 1.. GO!
+                EnableAllTheCarsNNs/*AndResetTimer*/();
             }
         }
         // Start of evolutionary cycles
@@ -211,6 +220,7 @@ public class Population : MonoBehaviour
                 numberCarsDriving = POPULATION_SIZE;
                 // Set cars to be driving again
                 // ...here... Generation 1.. GO!
+                EnableAllTheCarsNNs/*AndResetTimer*/();
             }
             Debug.Log("PSO SOLUTION: Final fitness: " + GlobalBestNN_Fitness);
         }
@@ -234,14 +244,16 @@ public class Population : MonoBehaviour
         // 4. If stopping conditions are met: stop, and save weights and other data to csv file.
     }
 
-    private void PositionCarAtStartLine(GameObject car)
+    public void PositionCarAtStartLine(GameObject car)
     {
-        car.transform.position = CarStartingPosition;
-        car.transform.rotation = CarStartingRotation;
         // Set car's velocity to zero
-        Rigidbody carsRigidbody = car.GetComponent<Rigidbody>();
+        //car.GetComponent<NeuralNetwork>().Sleep();
+        /*Rigidbody carsRigidbody = car.GetComponent<Rigidbody>();
         carsRigidbody.velocity = Vector3.zero;
-        carsRigidbody.angularVelocity = Vector3.zero;
+        carsRigidbody.angularVelocity = Vector3.zero;*/
+        car.transform.position = CarStartingPosition;
+        car.transform.rotation = CarStartingRotation;  
+        //this.gameObject.GetComponent<Timer>().ResetTimer();  
     }
     
     private List<float[][]> CloneOfWeights(List<float[][]> weightsToClone)
@@ -262,8 +274,14 @@ public class Population : MonoBehaviour
         return newCopy;
     }
 
+    // A car calls this to flag it as crashed
+    public void CallInAsCrashed() 
+    {
+        numberCarsDriving = numberCarsDriving - 1;
+    }
+
     // Generate Randomly Initialised Weights
-    private List<float[][]> GenerateRandomlyInitializedWeights()
+    /*private List<float[][]> GenerateRandomlyInitializedWeights()
     {
         List<float[][]> newRandomizedWeights = new List<float[][]>();
         foreach (int[] cur in Weights_template_dimensions)
@@ -280,12 +298,24 @@ public class Population : MonoBehaviour
             newRandomizedWeights.Add(newLayerWeights);
         }
         return newRandomizedWeights;  
-    }
+    }*/
 
     // Initialise Particle velocity to zero
     private List<float[][]> InitializeParticleVelocityToZero()
     {
-        List<float[][]> magnitudes = new List<float[][]>();
+        List<float[][]> magnitudes = CloneOfWeights(CarPopulation[0].GetComponent<NeuralNetwork>().weights);
+        foreach (float[][] cur in magnitudes)
+        {
+            for (int x = 0; x < cur.Length; x++)
+            {
+                for (int y = 0; y < cur[x].Length; y++)
+                {   
+                    cur[x][y] = 0f;
+                }
+            }
+        }
+        return magnitudes;
+        /*List<float[][]> magnitudes = new List<float[][]>();
         foreach (int[] cur in Weights_template_dimensions)
         {
             float[][] newLayerMagnitudes = new float[cur[0]][];
@@ -298,7 +328,7 @@ public class Population : MonoBehaviour
             }
             magnitudes.Add(newLayerMagnitudes);
         }
-        return magnitudes;  
+        return magnitudes;*/  
     }
 
     // Initialize Particle personal best weights to the weights currently in the car
@@ -309,6 +339,16 @@ public class Population : MonoBehaviour
             PersonalBestNN_Weights.Add(GetA_CarsNN_Weights(x));
             PersonalBestNN_Fitness.Add(GetA_CarsNN_Fitness(x));
         } 
+    }
+
+    // Switch the cars' NNs back on
+    private void EnableAllTheCarsNNs/*AndResetTimer*/()
+    {
+        for (int x = 0; x < CarPopulation.Count; x++) 
+        {
+            CarPopulation[x].GetComponent<NeuralNetwork>().WakeUp();
+        }
+        //this.gameObject.GetComponent<Timer>().ResetTimer();
     }
     
 
@@ -421,7 +461,7 @@ public class Population : MonoBehaviour
     {
         if (carIndex < CarPopulation.Count)
         {
-            return CarPopulation[carIndex].GetComponent<someScriptOnCarCollision>().fitness;
+            return CarPopulation[carIndex].GetComponent<CarSideEvolutionaryBehaviour>().fitness;
         }
         else
         {
