@@ -14,8 +14,9 @@ public class NeuralNetwork : MonoBehaviour
     public int hiddenLayers = 1;
     public int hLayer_size = 5;
     public int outputs = 2;
-    public int inputs = 5;
+    public int inputs =0;
     public float maxValue = 1f;
+    
 
     private bool sleep = false;
 
@@ -24,10 +25,13 @@ public class NeuralNetwork : MonoBehaviour
     public List<float[][]> weights { get; set; }
 
     private int layers;
-
+    int size = 0;
     void Start()
     {
-        layers = hiddenLayers + 2; // total layers including input and output layers
+        Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
+        size = feelerNum.feelerDists.GetLength(0);
+        inputs = size + 2;
+        layers = hidddenLayers + 2; // total layers including input and output layers
         weights = new List<float[][]>(); //weight initialisation
         neurons = new List<List<float>>();
 
@@ -65,12 +69,23 @@ public class NeuralNetwork : MonoBehaviour
         // get the car controller
         m_Car = GetComponent<CarController>();
     }
-
+ 
     private void FixedUpdate()
     {
         if (!sleep) 
         {
-            Feedforward(new float[] { getRandom(), getRandom(), getRandom(), getRandom(), getRandom() });
+            CarController car = this.GetComponent<CarController>();
+            Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
+       
+            float[] inputs = new float[size +2]; // initialised size of inputs as the num of feelers + 2 vars(speed and angle)
+            for (int i = 0; i < inputs.GetLength(0)-2; i++)
+            {
+                inputs[i] = feelerNum.feelerDists[i];
+            }
+            inputs[inputs.GetLength(0) - 2] = car.CurrentSpeed;
+            inputs[inputs.GetLength(0) - 1] = car.CurrentSteerAngle;
+        
+            Feedforward(inputs);
             // pass the input to the car!
             float h = getOutputs()[0];
             float v = getOutputs()[1];
@@ -83,6 +98,7 @@ public class NeuralNetwork : MonoBehaviour
             m_Car.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             m_Car.Move(0, 0, 0, 0/*h, v, v, 0f*/);
         }
+        
     }
 
     public void WakeUp()
