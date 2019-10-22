@@ -52,12 +52,24 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
     private void IsMoving()
     {
         GameObject car = this.gameObject;
+        PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
         car.GetComponent<NeuralNetwork>().Sleep();
-        evolutionManager.GetComponent<PopulationManager>().CallInAsCrashed();
-        int gen = evolutionManager.GetComponent<PopulationManager>().curGeneration;
+        if (distanceTravelled > 1500)
+        {
+            popMan.CallInAsTravelledFar();
+        }
+        popMan.CallInAsCrashed();
+        //int gen = popMan.curGeneration;
         float time = evolutionManager.GetComponent<Timer>().timeElapsedInSec;
-        fitness = Mathf.Pow(distanceTravelled,2)/*/time*/;
+        if (popMan.useTimeInFitness)
+        {
+            fitness = Mathf.Pow(distanceTravelled,2)/time;
+        }
+        else
+        {
+            fitness = Mathf.Pow(distanceTravelled,2);
+        }
         distanceTravelled = 0;
-        evolutionManager.GetComponent<PopulationManager>().PositionCarAtStartLine(car);
+        popMan.PositionCarAtStartLine(car);
     }
 }

@@ -51,6 +51,10 @@ public class PopulationManager : MonoBehaviour
     [SerializeField]
     private int numberCarsDriving;
 
+    private int carsGettingFar = 0;
+
+    public bool useTimeInFitness = false;
+
 
     // Create genes(weights) property and instantiate and position cars
     void Start()
@@ -130,6 +134,9 @@ public class PopulationManager : MonoBehaviour
             // If no cars are still driving
             if (numberCarsDriving <= 0)
             {
+
+                if (carsGettingFar >= 5) { useTimeInFitness = true; }
+
                 // have fitness calc in each car as it crashes. have a method that the car calls to decrease NumberCarsDriving by 1.
                 // Fetch each car's latest NN fitness
 
@@ -268,6 +275,11 @@ public class PopulationManager : MonoBehaviour
     public void CallInAsCrashed() 
     {
         numberCarsDriving = numberCarsDriving - 1;
+    }
+
+    public void CallInAsTravelledFar() 
+    {
+        carsGettingFar = carsGettingFar + 1;
     }
 
     // Generate Randomly Initialised Weights
