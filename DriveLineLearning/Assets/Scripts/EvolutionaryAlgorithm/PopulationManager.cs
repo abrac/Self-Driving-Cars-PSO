@@ -46,7 +46,7 @@ public class PopulationManager : MonoBehaviour
     public float cognitiveRandom;
 
     // Other variables
-    private int curGeneration;
+    public int curGeneration;
     private int leadCounter;
     [SerializeField]
     private int numberCarsDriving;
@@ -177,7 +177,8 @@ public class PopulationManager : MonoBehaviour
                             {
                                 socialRandom = Random.Range(0f,1f);
                                 cognitiveRandom = Random.Range(0f,1f);
-                                bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
+                                bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(GlobalBestWeights[layer][to][from] - bobIndividual[layer][to][from]);                                                            
+                                //bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
                             }
                         } 
                     }
@@ -210,11 +211,11 @@ public class PopulationManager : MonoBehaviour
                 // ...here... Generation 1.. GO!
                 EnableAllTheCarsNNs/*AndResetTimer*/();
             }
-            Debug.Log("PSO SOLUTION: Final fitness: " + GlobalBestNN_Fitness);
         }
         else 
         {
             //Solution is reached..
+            Debug.Log("PSO SOLUTION: Final fitness: " + GlobalBestNN_Fitness);
             //Save BEST Global Weights to a new text file: or put them in one car and let it race
         }
         
@@ -337,7 +338,7 @@ public class PopulationManager : MonoBehaviour
         {
             cars.carPopulation[x].GetComponent<NeuralNetwork>().WakeUp();
         }
-        //this.gameObject.GetComponent<Timer>().ResetTimer();
+        this.gameObject.GetComponent<Timer>().ResetTimer();
     }
     
 

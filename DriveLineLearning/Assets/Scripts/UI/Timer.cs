@@ -15,7 +15,7 @@ public class Timer : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         timeElapsedInSec = Time.time - startTime;
         string minutes = ((int)timeElapsedInSec / 60).ToString();
@@ -24,9 +24,9 @@ public class Timer : MonoBehaviour
         TimerText.text = minutes + ":" + seconds;
     }
 
-    /*public void ResetTimer() 
+    public void ResetTimer() 
     {
         startTime = Time.time;
-    }*/
+    }
 }
 

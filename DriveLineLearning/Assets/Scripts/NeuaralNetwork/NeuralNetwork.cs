@@ -69,7 +69,6 @@ public class NeuralNetwork : MonoBehaviour
     {
         if (!sleep) 
         {
-            CarController car = this.GetComponent<CarController>();
             Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
        
             float[] inputs = new float[size +2]; // initialised size of inputs as the num of feelers + 2 vars(speed and angle)
@@ -77,8 +76,8 @@ public class NeuralNetwork : MonoBehaviour
             {
                 inputs[i] = feelerNum.feelerDists[i];
             }
-            inputs[inputs.GetLength(0) - 2] = car.CurrentSpeed;
-            inputs[inputs.GetLength(0) - 1] = car.CurrentSteerAngle;
+            inputs[inputs.GetLength(0) - 2] = m_Car.CurrentSpeed;
+            inputs[inputs.GetLength(0) - 1] = m_Car.CurrentSteerAngle;
         
             Feedforward(inputs);
             // pass the input to the car!

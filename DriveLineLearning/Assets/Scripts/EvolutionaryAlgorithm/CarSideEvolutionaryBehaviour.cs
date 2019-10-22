@@ -37,21 +37,16 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
                 if (car.GetComponent<NeuralNetwork>().sleep == false)
                 {
                     IsMoving();
-                    StationaryPos = transform.position;
                 }
             }
+            StationaryPos = transform.position;
             startTime = Time.time;
         }
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        GameObject car = this.gameObject;
-        car.GetComponent<NeuralNetwork>().Sleep();
-        evolutionManager.GetComponent<PopulationManager>().CallInAsCrashed();
-        fitness = distanceTravelled/evolutionManager.GetComponent<Timer>().timeElapsedInSec;
-        distanceTravelled = 0;
-        evolutionManager.GetComponent<PopulationManager>().PositionCarAtStartLine(car);
+        IsMoving();
     }
 
     private void IsMoving()
@@ -59,7 +54,9 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         GameObject car = this.gameObject;
         car.GetComponent<NeuralNetwork>().Sleep();
         evolutionManager.GetComponent<PopulationManager>().CallInAsCrashed();
-        fitness = distanceTravelled / evolutionManager.GetComponent<Timer>().timeElapsedInSec;
+        int gen = evolutionManager.GetComponent<PopulationManager>().curGeneration;
+        float time = evolutionManager.GetComponent<Timer>().timeElapsedInSec;
+        fitness = Mathf.Pow(distanceTravelled,2)/*/time*/;
         distanceTravelled = 0;
         evolutionManager.GetComponent<PopulationManager>().PositionCarAtStartLine(car);
     }
