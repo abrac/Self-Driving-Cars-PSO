@@ -23,5 +23,10 @@ public class Timer : MonoBehaviour
 
         TimerText.text = minutes + ":" + seconds;
     }
+
+    /*public void ResetTimer() 
+    {
+        startTime = Time.time;
+    }*/
 }
 
