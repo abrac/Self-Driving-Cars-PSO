@@ -12,7 +12,7 @@ public class PopulationManager : MonoBehaviour
     static int BEST_INDIVIDUAL_STREAK = 70;
 
     // The car population script Component
-    private CarPopulation cars;
+    public CarPopulation cars;
 
     // Individuals of the population's fitness
     private List<float> CurrentNN_Fitness = new List<float>();
@@ -48,21 +48,13 @@ public class PopulationManager : MonoBehaviour
     // Other variables
     public int curGeneration;
     private int leadCounter;
-    public GameObject StartingBlocks;
-    public Vector3 CarStartingPosition;
-    public Quaternion CarStartingRotation;
     [SerializeField]
-    private int numberCarsDriving = 0;
+    private int numberCarsDriving;
 
 
     // Create genes(weights) property and instantiate and position cars
     void Start()
     {
-        // Find and store reference to Starting Block where to initialize the cars
-        Transform startPosition = StartingBlocks.transform;
-        CarStartingRotation = startPosition.rotation;
-        CarStartingPosition = startPosition.position;
-        cars = this.gameObject.GetComponent<CarPopulation>();
         // Initialize some variables
         curGeneration = 0;
         leadCounter = 0;
@@ -248,11 +240,8 @@ public class PopulationManager : MonoBehaviour
         /*Rigidbody carsRigidbody = car.GetComponent<Rigidbody>();
         carsRigidbody.velocity = Vector3.zero;
         carsRigidbody.angularVelocity = Vector3.zero;*/
-        Transform startPosition = StartingBlocks.transform;
-        CarStartingRotation = startPosition.rotation;
-        CarStartingPosition = startPosition.position;
-        car.transform.position = CarStartingPosition;
-        car.transform.rotation = CarStartingRotation;  
+        car.transform.position = cars.CarStartingPosition;
+        car.transform.rotation = cars.CarStartingRotation;  
         //this.gameObject.GetComponent<Timer>().ResetTimer();  
     }
     
