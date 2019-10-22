@@ -105,7 +105,6 @@ public class PopulationManager : MonoBehaviour
                 PersonalBestNN_Weights = new List<List<float[][]>>();
                 curGeneration++;
                 numberCarsDriving = POPULATION_SIZE;
-                EnableAllTheCarsNNs();
                 InitializeParticlePersonalBests(); // to the weights currently in the car and the resultant fitness
                 
                 // Initialize "Global" bests (y-hat) All-best and Ring topology (Based on Personal bests initially - then subsequently on Y-Hats)
@@ -116,10 +115,10 @@ public class PopulationManager : MonoBehaviour
                 UpdateGlobalAndY_HatRingTopologyBestVectors(true);
             
                 // reset test cycle - new generation
-                foreach (GameObject car in cars.carPopulation)
+                /*foreach (GameObject car in cars.carPopulation)
                 {
                     PositionCarAtStartLine(car);
-                }
+                }*/
                 curGeneration++;
                 numberCarsDriving = POPULATION_SIZE;
                 // Set cars to be driving again
@@ -202,10 +201,10 @@ public class PopulationManager : MonoBehaviour
                 }
 
                 // reset test cycle - new generation
-                foreach (GameObject car in cars.carPopulation)
+                /*foreach (GameObject car in cars.carPopulation)
                 {
                     PositionCarAtStartLine(car);
-                }
+                }*/
                 curGeneration++;
                 leadCounter++;
                 numberCarsDriving = POPULATION_SIZE;
