@@ -128,7 +128,7 @@ public class PopulationManager : MonoBehaviour
         else if (curGeneration <= MAX_GENERATIONS /*&& leadCounter < BEST_INDIVIDUAL_STREAK*/)
         {
             // If no cars are still driving
-            if (numberCarsDriving == 0)
+            if (numberCarsDriving <= 0)
             {
                 // have fitness calc in each car as it crashes. have a method that the car calls to decrease NumberCarsDriving by 1.
                 // Fetch each car's latest NN fitness
@@ -175,8 +175,8 @@ public class PopulationManager : MonoBehaviour
                         {
                             for (int from = 0; from < bobVelocity[layer][to].Length; from++)
                             {
-                                socialRandom = Random.Range(0,1);
-                                cognitiveRandom = Random.Range(0,1);
+                                socialRandom = Random.Range(0f,1f);
+                                cognitiveRandom = Random.Range(0f,1f);
                                 bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
                             }
                         } 
