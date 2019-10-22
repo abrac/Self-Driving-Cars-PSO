@@ -34,7 +34,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
             if (Vector3.Distance(StationaryPos, transform.position) < 5)
             {
                 GameObject car = this.gameObject;
-                if (car.GetComponent<NeuralNetwork>().sleep == true)
+                if (car.GetComponent<NeuralNetwork>().sleep == false)
                 {
                     IsMoving();
                     StationaryPos = transform.position;
