@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Vehicles.Car;
@@ -103,8 +103,6 @@ public class PopulationManager : MonoBehaviour
                 // Initialize Personal bests (weights and fitness)
                 PersonalBestNN_Fitness = new List<float>();
                 PersonalBestNN_Weights = new List<List<float[][]>>();
-                //curGeneration++;
-                //numberCarsDriving = POPULATION_SIZE;
                 InitializeParticlePersonalBests(); // to the weights currently in the car and the resultant fitness
                 
                 // Initialize "Global" bests (y-hat) All-best and Ring topology (Based on Personal bests initially - then subsequently on Y-Hats)
@@ -127,7 +125,7 @@ public class PopulationManager : MonoBehaviour
             }
         }
         // Start of evolutionary cycles
-        else if (curGeneration <= MAX_GENERATIONS && leadCounter < BEST_INDIVIDUAL_STREAK)
+        else if (curGeneration <= MAX_GENERATIONS /*&& leadCounter < BEST_INDIVIDUAL_STREAK*/)
         {
             // If no cars are still driving
             if (numberCarsDriving == 0)
@@ -254,6 +252,7 @@ public class PopulationManager : MonoBehaviour
             float[][] newClone = new float[cur.Length][];
             for (int x = 0, length = cur.Length; x < length; x++)
             {
+                newClone[x] = new float[cur[x].Length];
                 for (int y = 0, innerLength = cur[x].Length; y < innerLength; y++)
                 {   
                     newClone[x][y] = cur[x][y];
