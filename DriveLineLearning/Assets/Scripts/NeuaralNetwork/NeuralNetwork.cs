@@ -31,7 +31,7 @@ public class NeuralNetwork : MonoBehaviour
         Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
         size = feelerNum.feelerDists.GetLength(0);
         inputs = size + 2;
-        layers = hidddenLayers + 2; // total layers including input and output layers
+        layers = hiddenLayers + 2; // total layers including input and output layers
         weights = new List<float[][]>(); //weight initialisation
         neurons = new List<List<float>>();
 
