@@ -8,6 +8,9 @@ public class Population : MonoBehaviour
     public int POPULATION_SIZE = 50;
     public int INITIAL_WEIGHTS_UPPER_BOUND = 100;
     public int MAX_GENERATIONS = 1000;
+    private float mutationProbab=0.2f;
+    private float maxVariation=1f;
+    private float maxMutation=1f;
 
     // Car objects - Population
     public List<GameObject> CarPopulation = new List<GameObject>();
@@ -63,7 +66,7 @@ public class Population : MonoBehaviour
         {
             GameObject newCar = GameObject.Instantiate(NeuralNetworkControlledCar);
             PositionCarAtStartLine(newCar);
-            NeuralNetwork carsNN = newCar.GetComponent<NeuralNetwork>();
+            NN carsNN = newCar.GetComponent<NN>();
             carsNN.weights = GenerateRandomlyInitializedWeights();
             // Add the car to the population
             CarPopulation.Add(newCar);
@@ -81,13 +84,24 @@ public class Population : MonoBehaviour
         //      2.1. Disable Car.
         //      2.2. Evaluate fitness.
         //      2.3. Store fitness and weights in personalBestWeights (if applicable)
-        //      2.4. Store fitness and weights in globalBestWeights (if applicable)
+        //      2.4. Store finess and weights in globalBestWeights (if applicable)
         // 3. If all cars have collided (when collisionCounter = popSize):
         //      3.1. Update all the particle "positions" (i.e. weights) and particle "velocities"
         //      3.2. start a new generation by moving all cars to the startPosition
         //      3.3. Enable Car.
         // 4. If stopping conditions are met: stop, and save weights and other data to csv file.
-    }
+         
+      GameObject[] CarPopulation=new GameObject[50];
+       POPULATION_SIZE=50;
+        for(int i=0;i<POPULATION_SIZE;++i)
+           
+     {
+        CarPopulation[i].NN.CalculateFitnessTheWeightsAchieved();
+            CarPopulation.NN.CrossoverPopulation[i+1]
+
+        
+
+   }
 
     private void PositionCarAtStartLine(GameObject car)
     {
@@ -98,6 +112,62 @@ public class Population : MonoBehaviour
         carsRigidbody.velocity = Vector3.zero;
         carsRigidbody.angularVelocity = Vector3.zero;
     }
+
+    public  void  Mutate()// mutation method
+    {
+         List<float[][]>newGenes= new List<float[][]>();
+        for (int i=0; i<POPULATION_SIZE;++i)
+        {
+            float[][]weightslayer=CarPoulation[i];
+            for (int j=0;j<weightslayer[j].Length;j++)
+            {
+                for(int k=0;k<weightslayer[j].Length;k++)
+                {
+                    float rand=Random.Range(0f,1f);
+                    if(rand<mutationProbab)
+                    {
+                        weightslayer[j][k] = Random.Range(-maxVariation,maxVariation);
+
+
+                    }
+
+                }
+            }
+                       newGenes.Add(weightslayer);
+        }
+                    return new carPopulation(newGenes);
+    }
+    public Population crossover(Population otherParent)// crossover method
+    {
+        List<float[][]> child =new List<float[][]>();
+        for (int i=0;i<POPULATION_SIZE;i++)
+        {
+            float[][]otherParentLayer=otherParent.getGenes()[i]; 
+            float[][]parentLayer=genes[i];
+            for (int k=0;k<parentLayer.Length; k++)
+            {
+                float rand=Random.Range(0f,1f);
+                if(rand<0.5f)
+                {
+                   parentLayer[i][k]=otherParentLayer[][];
+                }
+                else
+                {
+                    parentLayer[j][k]=parentLayer[j][k];
+                }
+                child.Add(parentLayer);
+            }
+        
+        return new Population (child);
+        }
+        
+    }
+}
+}
+}
+            
+
+   
     
     private List<float[][]> CloneOfWeights(List<float[][]> weightsToClone)
     {
@@ -150,9 +220,14 @@ public class Population : MonoBehaviour
 
         // some funtion to combine them
         return dist/timeElapsed;
+        {
+           
+
+
+         }
     }
 }
-
+          
 /* Geoff's JAVA PSO Code 
 // COMMON PARAM
     static List<double[]> population = new ArrayList<>(); //List<double[5]> == 4 alloy amounts & fitness score
