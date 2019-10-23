@@ -10,10 +10,12 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
     Vector3 StationaryPos;
     public float fitness;
     private float startTime;
+    public bool isDriving;
 
     // Start is called before the first frame update
     void Start()
     {
+        isDriving = true;
         distanceTravelled = 0;
         lastPosition = transform.position;
 
@@ -23,7 +25,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         distanceTravelled += Vector3.Distance(transform.position,lastPosition);
         lastPosition = transform.position;
@@ -36,7 +38,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
                 GameObject car = this.gameObject;
                 if (car.GetComponent<NeuralNetwork>().sleep == false)
                 {
-                    IsMoving();
+                    ResetAndLogCarTermination();
                 }
             }
             StationaryPos = transform.position;
@@ -46,10 +48,10 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        IsMoving();
+        ResetAndLogCarTermination();
     }
 
-    private void IsMoving()
+    private void ResetAndLogCarTermination()
     {
         GameObject car = this.gameObject;
         PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
@@ -58,9 +60,9 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         {
             popMan.CallInAsTravelledFar();
         }
-        popMan.CallInAsCrashed();
         //int gen = popMan.curGeneration;
-        float time = evolutionManager.GetComponent<Timer>().timeElapsedInSec;
+        float time = evolutionManager.GetComponent<Timer>().timeElapsedInSec; // Using a master timer
+        //float time = car.GetComponent<Timer>().timeElapsedInSec; // used if each car has a timer
         if (popMan.useTimeInFitness)
         {
             fitness = Mathf.Pow(distanceTravelled,2)/time;
@@ -71,5 +73,6 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         }
         distanceTravelled = 0;
         popMan.PositionCarAtStartLine(car);
+        isDriving = false;
     }
 }

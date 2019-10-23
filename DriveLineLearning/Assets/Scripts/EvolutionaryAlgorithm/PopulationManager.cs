@@ -51,7 +51,7 @@ public class PopulationManager : MonoBehaviour
     public int curGeneration;
     private int leadCounter;
     [SerializeField]
-    private int numberCarsDriving;
+    private int numberCarsDriving = 0;
 
     private int carsGettingFar = 0;
 
@@ -64,7 +64,6 @@ public class PopulationManager : MonoBehaviour
         // Initialize some variables
         curGeneration = 0;
         leadCounter = 0;
-        numberCarsDriving = POPULATION_SIZE;
 
         
 
@@ -97,8 +96,17 @@ public class PopulationManager : MonoBehaviour
         // So can build that in on Update() 
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        numberCarsDriving = 0;
+        foreach (GameObject cur in cars.carPopulation) 
+        {
+            if (cur.GetComponent<CarSideEvolutionaryBehaviour>().isDriving) 
+            {
+                numberCarsDriving++;
+            }
+        }
+
         // Still part of setup - run initialised cars once to get initial fitness
         if (curGeneration == 0)
         {
@@ -124,7 +132,6 @@ public class PopulationManager : MonoBehaviour
                     PositionCarAtStartLine(car);
                 }*/
                 curGeneration++;
-                numberCarsDriving = POPULATION_SIZE;
                 // Set cars to be driving again
                 // ...here... Generation 1.. GO!
                 EnableAllTheCarsNNs/*AndResetTimer*/();
@@ -165,7 +172,7 @@ public class PopulationManager : MonoBehaviour
                 }
 
                 //Print Best Fitness
-                Debug.Log(GlobalBestNN_Fitness);
+                Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration);
 
                 // Recalculate latest ring Y_Hats 
                 UpdateGlobalAndY_HatRingTopologyBestVectors(false);
@@ -215,7 +222,6 @@ public class PopulationManager : MonoBehaviour
                 }*/
                 curGeneration++;
                 leadCounter++;
-                numberCarsDriving = POPULATION_SIZE;
                 // Set cars to be driving again
                 // ...here... Generation 1.. GO!
                 EnableAllTheCarsNNs/*AndResetTimer*/();
@@ -273,12 +279,6 @@ public class PopulationManager : MonoBehaviour
             newCopy.Add(newClone);
         }
         return newCopy;
-    }
-
-    // A car calls this to flag it as crashed
-    public void CallInAsCrashed() 
-    {
-        numberCarsDriving = numberCarsDriving - 1;
     }
 
     public void CallInAsTravelledFar() 
@@ -371,6 +371,9 @@ public class PopulationManager : MonoBehaviour
     {
         for (int x = 0; x < cars.carPopulation.Count; x++) 
         {
+            CarSideEvolutionaryBehaviour cur = cars.carPopulation[x].GetComponent<CarSideEvolutionaryBehaviour>();
+            if (!cur.isDriving)
+                cur.isDriving = true;
             cars.carPopulation[x].GetComponent<NeuralNetwork>().WakeUp();
         }
         this.gameObject.GetComponent<Timer>().ResetTimer();
