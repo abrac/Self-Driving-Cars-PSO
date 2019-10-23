@@ -10,8 +10,8 @@ public class PopulationManager : MonoBehaviour
     // Parameters
     public int POPULATION_SIZE = 10;
     public int INITIAL_WEIGHTS_UPPER_BOUND = 1;
-    public int MAX_GENERATIONS = 10;
-    static int BEST_INDIVIDUAL_STREAK = 70;
+    public int MAX_GENERATIONS = 1500;
+    public int BEST_INDIVIDUAL_STREAK = 5000;
 
     // The car population script Component
     public CarPopulation cars;
@@ -35,7 +35,7 @@ public class PopulationManager : MonoBehaviour
     private float GlobalBestNN_Fitness;
 
     // Links to used Game Objects
-    
+    public GameObject BestCarDemo;
 
     // Weights (vector dimensions) based on car's NN structure in the form: List index = layer; int[2] with { totalfromN,s, totalToN,s };
     //private List<int[]> Weights_template_dimensions; // IGNORE->: + one array of size 1 added (to Store the fitness)
@@ -49,10 +49,10 @@ public class PopulationManager : MonoBehaviour
 
     // Other variables
     public int curGeneration;
-    private int leadCounter;
+    public int leadCounter;
     [SerializeField]
     private int numberCarsDriving = 0;
-
+    [SerializeField]
     private int carsGettingFar = 0;
 
     public bool useTimeInFitness = false;
@@ -138,18 +138,16 @@ public class PopulationManager : MonoBehaviour
             }
         }
         // Start of evolutionary cycles
-        else if (curGeneration <= MAX_GENERATIONS /*&& leadCounter < BEST_INDIVIDUAL_STREAK*/)
+        else if (/*curGeneration <= MAX_GENERATIONS &&*/ leadCounter < BEST_INDIVIDUAL_STREAK)
         {
-            // If no cars are still driving
-            if (numberCarsDriving <= 0)
+            if (carsGettingFar >= 5) { useTimeInFitness = true; }
+
+            // have fitness calc in each car as it crashes. have a method that the car calls to decrease NumberCarsDriving by 1.
+            // Fetch each car's latest NN fitness
+
+            for (int curIndividual = 0; curIndividual < POPULATION_SIZE; curIndividual++) 
             {
-
-                if (carsGettingFar >= 5) { useTimeInFitness = true; }
-
-                // have fitness calc in each car as it crashes. have a method that the car calls to decrease NumberCarsDriving by 1.
-                // Fetch each car's latest NN fitness
-
-                for (int curIndividual = 0; curIndividual < POPULATION_SIZE; curIndividual++) 
+                if (!cars.carPopulation[curIndividual].gameObject.GetComponent<CarSideEvolutionaryBehaviour>().isDriving) 
                 {
                     // Update personal best
                     if (GetA_CarsNN_Fitness(curIndividual) > PersonalBestNN_Fitness[curIndividual]) 
@@ -170,15 +168,18 @@ public class PopulationManager : MonoBehaviour
                         leadCounter = 0;
                     }*/
                 }
+            }
 
-                //Print Best Fitness
-                Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration);
+            // Recalculate latest ring Y_Hats 
+            UpdateGlobalAndY_HatRingTopologyBestVectors(false);
 
-                // Recalculate latest ring Y_Hats 
-                UpdateGlobalAndY_HatRingTopologyBestVectors(false);
+            //Print Best Fitness
+            Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration);
 
-                // Calculate new velocity for each individual
-                for (int bob = 0; bob < cars.carPopulation.Count; bob++) 
+            // Calculate new velocity for each individual
+            for (int bob = 0; bob < cars.carPopulation.Count; bob++) 
+            {
+                if (!cars.carPopulation[bob].gameObject.GetComponent<CarSideEvolutionaryBehaviour>().isDriving) 
                 {
                     List<float[][]> bobIndividual = GetA_CarsNN_Weights(bob);
                     List<float[][]> bobVelocity = ParticleVelocityVectors[bob];
@@ -193,8 +194,8 @@ public class PopulationManager : MonoBehaviour
                             {
                                 socialRandom = UnityEngine.Random.Range(0f,1f);
                                 cognitiveRandom = UnityEngine.Random.Range(0f,1f);
-                                bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(GlobalBestWeights[layer][to][from] - bobIndividual[layer][to][from]);                                                            
-                                //bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
+                                //bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(GlobalBestWeights[layer][to][from] - bobIndividual[layer][to][from]);                                                            
+                                bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
                             }
                         } 
                     }
@@ -214,18 +215,18 @@ public class PopulationManager : MonoBehaviour
                     // Place new Gen weights back in the car
                     cars.carPopulation[bob].GetComponent<NeuralNetwork>().weights = bobIndividual;
                 }
-
-                // reset test cycle - new generation
-                /*foreach (GameObject car in cars.carPopulation)
-                {
-                    PositionCarAtStartLine(car);
-                }*/
-                curGeneration++;
-                leadCounter++;
-                // Set cars to be driving again
-                // ...here... Generation 1.. GO!
-                EnableAllTheCarsNNs/*AndResetTimer*/();
             }
+
+            // reset test cycle - new generation
+            /*foreach (GameObject car in cars.carPopulation)
+            {
+                PositionCarAtStartLine(car);
+            }*/
+            curGeneration++;
+            leadCounter++;
+            // Set cars to be driving again
+            // ...here... Generation 1.. GO!
+            EnableAllTheCarsNNs/*AndResetTimer*/();
         }
         else 
         {
@@ -372,11 +373,13 @@ public class PopulationManager : MonoBehaviour
         for (int x = 0; x < cars.carPopulation.Count; x++) 
         {
             CarSideEvolutionaryBehaviour cur = cars.carPopulation[x].GetComponent<CarSideEvolutionaryBehaviour>();
-            if (!cur.isDriving)
+            if (!cur.isDriving) 
+            {
                 cur.isDriving = true;
-            cars.carPopulation[x].GetComponent<NeuralNetwork>().WakeUp();
+                cars.carPopulation[x].GetComponent<NeuralNetwork>().WakeUp();
+                cars.carPopulation[x].GetComponent<Timer>().ResetTimer();
+            }  
         }
-        this.gameObject.GetComponent<Timer>().ResetTimer();
     }
     
 
@@ -436,6 +439,10 @@ public class PopulationManager : MonoBehaviour
         // Update the global best weights
         GlobalBestNN_Fitness = originFitness[indexOfGlobalFittest];
         GlobalBestWeights = CloneOfWeights(originWeights[indexOfGlobalFittest]);
+        BestCarDemo.GetComponent<NeuralNetwork>().weights = CloneOfWeights(GlobalBestWeights);
+        BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().isDriving = true;
+        BestCarDemo.GetComponent<NeuralNetwork>().WakeUp();
+        BestCarDemo.GetComponent<Timer>().ResetTimer();
     }
 
     private int GetIndexOfFittest(List<float> theFitnessValues, int[] subsetIndices = null) 

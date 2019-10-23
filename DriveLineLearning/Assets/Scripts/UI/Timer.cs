@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    public Text TimerText;
+    //public Text TimerText;
 
     public float timeElapsedInSec;
     private float startTime;
@@ -21,7 +21,7 @@ public class Timer : MonoBehaviour
         string minutes = ((int)timeElapsedInSec / 60).ToString();
         string seconds = (timeElapsedInSec % 60).ToString("f2");
 
-        TimerText.text = minutes + ":" + seconds;
+        //TimerText.text = minutes + ":" + seconds;
     }
 
     public void ResetTimer() 

@@ -62,16 +62,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4907bcb48afe03a4db1858438e4a37c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  POPULATION_SIZE: 10
+  POPULATION_SIZE: 30
   INITIAL_WEIGHTS_UPPER_BOUND: 1
-  MAX_GENERATIONS: 1000
+  MAX_GENERATIONS: 500
+  BEST_INDIVIDUAL_STREAK: 5000
   cars: {fileID: 7889055724212137035}
-  cognitiveConst: 0.7
-  socialConst: 1
-  w: 0.6
+  BestCarDemo: {fileID: 0}
+  cognitiveConst: 0.8
+  socialConst: 0.5
+  w: 1
   socialRandom: 0
   cognitiveRandom: 0
-  numberCarsDriving: -320
+  curGeneration: 0
+  leadCounter: 0
+  numberCarsDriving: 0
+  carsGettingFar: 0
+  useTimeInFitness: 0
 --- !u!114 &7889055724212137032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,10 +85,9 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7889055724212137039}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65bc2d311e2544fa8ba46b49d548c495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimerText: {fileID: 0}
   timeElapsedInSec: 0

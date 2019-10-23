@@ -8,9 +8,12 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
     public float distanceTravelled = 0;
     Vector3 lastPosition;
     Vector3 StationaryPos;
+    Vector3 StartPos;
     public float fitness;
     private float startTime;
     public bool isDriving;
+
+    public bool isDemo = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +23,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         lastPosition = transform.position;
 
         StationaryPos = transform.position;
+        StartPos = transform.position;;
         startTime = Time.time;
 
     }
@@ -33,7 +37,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         float t = Time.time - startTime;
         if (t > 5)
         {
-            if (Vector3.Distance(StationaryPos, transform.position) < 5)
+            if (Vector3.Distance(StationaryPos, transform.position) < 15)
             {
                 GameObject car = this.gameObject;
                 if (car.GetComponent<NeuralNetwork>().sleep == false)
@@ -53,26 +57,58 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
 
     private void ResetAndLogCarTermination()
     {
-        GameObject car = this.gameObject;
-        PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
-        car.GetComponent<NeuralNetwork>().Sleep();
-        if (distanceTravelled > 1000)
+        if (!isDemo) 
         {
-            popMan.CallInAsTravelledFar();
+            GameObject car = this.gameObject;
+            PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
+            car.GetComponent<NeuralNetwork>().Sleep();
+            if (distanceTravelled > 1000)
+            {
+                popMan.CallInAsTravelledFar();
+            }
+            fitness = fitnessFunction(); // not necessary, as fitness is Global
+            distanceTravelled = 0;
+            popMan.PositionCarAtStartLine(car);
+            isDriving = false;
         }
-        //int gen = popMan.curGeneration;
-        float time = evolutionManager.GetComponent<Timer>().timeElapsedInSec; // Using a master timer
-        //float time = car.GetComponent<Timer>().timeElapsedInSec; // used if each car has a timer
-        if (popMan.useTimeInFitness)
+        else 
         {
-            fitness = Mathf.Pow(distanceTravelled,2)/time;
+            GameObject car = this.gameObject;
+            PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
+            car.GetComponent<NeuralNetwork>().Sleep();
+            distanceTravelled = 0;
+            popMan.PositionCarAtStartLine(car);
+            isDriving = false;
+        }        
+    }
+
+    private float fitnessFunction() 
+    {
+        //float time = evolutionManager.GetComponent<Timer>().timeElapsedInSec; // Using a master timer
+        float time = this.gameObject.GetComponent<Timer>().timeElapsedInSec; // used if each car has a timer
+        if (evolutionManager.GetComponent<PopulationManager>().useTimeInFitness)
+        {
+            if(/*distanceTravelled > 800 ||*/ Vector3.Distance(StartPos, transform.position) > 6)
+            {
+                fitness = Mathf.Pow(distanceTravelled,2)/*/time*/;
+            }
+            else
+            {
+                fitness = - distanceTravelled/2;
+            }
         }
         else
         {
-            fitness = Mathf.Pow(distanceTravelled,2);
+            if(/*distanceTravelled > 800 &&*/ Vector3.Distance(StartPos, transform.position) > 6)
+            {
+                fitness = Mathf.Pow(distanceTravelled,2)/*/time*/;
+            }
+            else
+            {
+                fitness= - distanceTravelled/2;
+            }
         }
-        distanceTravelled = 0;
-        popMan.PositionCarAtStartLine(car);
-        isDriving = false;
+
+        return fitness;
     }
 }
