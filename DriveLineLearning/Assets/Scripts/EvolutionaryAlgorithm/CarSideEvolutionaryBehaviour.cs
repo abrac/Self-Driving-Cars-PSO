@@ -40,7 +40,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
             if (Vector3.Distance(StationaryPos, transform.position) < 15)
             {
                 GameObject car = this.gameObject;
-                if (car.GetComponent<NeuralNetwork>().sleep == false)
+                if (car.GetComponent<NeuralNetwork>().sleep == false /*&& !isDemo*/)
                 {
                     ResetAndLogCarTermination();
                 }
@@ -75,10 +75,12 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         {
             GameObject car = this.gameObject;
             PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
-            car.GetComponent<NeuralNetwork>().Sleep();
+            // Stop
             distanceTravelled = 0;
-            popMan.PositionCarAtStartLine(car);
+            car.GetComponent<NeuralNetwork>().Sleep();
             isDriving = false;
+            
+            popMan.ResetDemoCar();
         }        
     }
 
@@ -90,6 +92,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         {
             if(/*distanceTravelled > 800 ||*/ Vector3.Distance(StartPos, transform.position) > 6)
             {
+                //fitness = Mathf.Pow(distanceTravelled,2) + Mathf.Pow(distanceTravelled/time*0.0001f,distanceTravelled/10);
                 fitness = Mathf.Pow(distanceTravelled,2)/*/time*/;
             }
             else
@@ -101,6 +104,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         {
             if(/*distanceTravelled > 800 &&*/ Vector3.Distance(StartPos, transform.position) > 6)
             {
+                //fitness = Mathf.Pow(distanceTravelled,2) + Mathf.Pow(distanceTravelled/time*0.0001f,distanceTravelled/10);
                 fitness = Mathf.Pow(distanceTravelled,2)/*/time*/;
             }
             else

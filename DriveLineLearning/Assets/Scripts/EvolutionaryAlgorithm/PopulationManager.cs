@@ -174,7 +174,7 @@ public class PopulationManager : MonoBehaviour
             UpdateGlobalAndY_HatRingTopologyBestVectors(false);
 
             //Print Best Fitness
-            Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration);
+            //Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration);
 
             // Calculate new velocity for each individual
             for (int bob = 0; bob < cars.carPopulation.Count; bob++) 
@@ -194,7 +194,9 @@ public class PopulationManager : MonoBehaviour
                             {
                                 socialRandom = UnityEngine.Random.Range(0f,1f);
                                 cognitiveRandom = UnityEngine.Random.Range(0f,1f);
+                                // Gbest
                                 //bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(GlobalBestWeights[layer][to][from] - bobIndividual[layer][to][from]);                                                            
+                                // Ring Topology
                                 bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
                             }
                         } 
@@ -234,6 +236,7 @@ public class PopulationManager : MonoBehaviour
             Debug.Log("PSO SOLUTION: Final fitness: " + GlobalBestNN_Fitness);
             WriteBestWeightsToFile();
             Debug.Log("Best Weights saved to file...");
+            leadCounter = 0;
             //Save BEST Global Weights to a new text file: or put them in one car and let it race
         }
         
@@ -262,6 +265,22 @@ public class PopulationManager : MonoBehaviour
         car.transform.rotation = cars.CarStartingRotation;  
         //this.gameObject.GetComponent<Timer>().ResetTimer();  
     }
+
+    public void ResetDemoCar() 
+    {
+        // Update NN with Best Weights
+            if (GlobalBestWeights.Count != 0)
+                BestCarDemo.GetComponent<NeuralNetwork>().weights = CloneOfWeights(GlobalBestWeights);
+            BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().fitness = GlobalBestNN_Fitness;
+
+            // Reset and Start
+            BestCarDemo.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            BestCarDemo.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            PositionCarAtStartLine(BestCarDemo);
+            BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().isDriving = true;
+            BestCarDemo.GetComponent<NeuralNetwork>().WakeUp();
+            BestCarDemo.GetComponent<Timer>().ResetTimer();
+    }
     
     private List<float[][]> CloneOfWeights(List<float[][]> weightsToClone)
     {
@@ -289,7 +308,15 @@ public class PopulationManager : MonoBehaviour
 
     public void WriteBestWeightsToFile() 
     {
-        StreamWriter sr = new StreamWriter("best_weights(" + DateTime.Now + ").dat");
+        NeuralNetwork NN = BestCarDemo.GetComponent<NeuralNetwork>();
+        string path = String.Format("Assets/Best weights Logs/Best_log_NNFormat({0}-HidUnits,{1}-Inputs).txt", NN.hLayer_size, NN.inputs);
+
+        StreamWriter sr = new StreamWriter(path,true);
+        sr.WriteLine("/////////////////// START ///////////////////");
+        sr.WriteLine("Hidden layers: ", NN.hiddenLayers);
+        sr.WriteLine("Hidden layer size: ", NN.hLayer_size);
+        sr.WriteLine("Hidden layers: ", NN.hiddenLayers);
+
         sr.WriteLine("Fitness: " + GlobalBestNN_Fitness);
         int layer = 0;
         foreach (float[][] cur in GlobalBestWeights)
@@ -303,6 +330,7 @@ public class PopulationManager : MonoBehaviour
             }
             layer++;
         }
+        sr.WriteLine("///////////////////  END  ///////////////////");
         sr.Close();
     }
 
@@ -436,13 +464,15 @@ public class PopulationManager : MonoBehaviour
                 Y_HatNN_Weights.Add(CloneOfWeights(originWeights[indexOfRingY_HatFittest]));
             }
         }
-        // Update the global best weights
-        GlobalBestNN_Fitness = originFitness[indexOfGlobalFittest];
-        GlobalBestWeights = CloneOfWeights(originWeights[indexOfGlobalFittest]);
-        BestCarDemo.GetComponent<NeuralNetwork>().weights = CloneOfWeights(GlobalBestWeights);
-        BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().isDriving = true;
-        BestCarDemo.GetComponent<NeuralNetwork>().WakeUp();
-        BestCarDemo.GetComponent<Timer>().ResetTimer();
+        if (GlobalBestNN_Fitness < originFitness[indexOfGlobalFittest])
+        {
+            // Update the global best weights
+            GlobalBestNN_Fitness = originFitness[indexOfGlobalFittest];
+            GlobalBestWeights = CloneOfWeights(originWeights[indexOfGlobalFittest]);
+            //Print Best Fitness
+            Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration);
+        }
+        
     }
 
     private int GetIndexOfFittest(List<float> theFitnessValues, int[] subsetIndices = null) 
