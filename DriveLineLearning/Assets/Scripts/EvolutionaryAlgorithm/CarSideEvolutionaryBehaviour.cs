@@ -54,7 +54,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         GameObject car = this.gameObject;
         PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
         car.GetComponent<NeuralNetwork>().Sleep();
-        if (distanceTravelled > 1500)
+        if (distanceTravelled > 1000)
         {
             popMan.CallInAsTravelledFar();
         }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityStandardAssets.Vehicles.Car;
 
@@ -8,7 +10,7 @@ public class PopulationManager : MonoBehaviour
     // Parameters
     public int POPULATION_SIZE = 10;
     public int INITIAL_WEIGHTS_UPPER_BOUND = 1;
-    public int MAX_GENERATIONS = 1000;
+    public int MAX_GENERATIONS = 10;
     static int BEST_INDIVIDUAL_STREAK = 70;
 
     // The car population script Component
@@ -182,8 +184,8 @@ public class PopulationManager : MonoBehaviour
                         {
                             for (int from = 0; from < bobVelocity[layer][to].Length; from++)
                             {
-                                socialRandom = Random.Range(0f,1f);
-                                cognitiveRandom = Random.Range(0f,1f);
+                                socialRandom = UnityEngine.Random.Range(0f,1f);
+                                cognitiveRandom = UnityEngine.Random.Range(0f,1f);
                                 bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(GlobalBestWeights[layer][to][from] - bobIndividual[layer][to][from]);                                                            
                                 //bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
                             }
@@ -223,6 +225,8 @@ public class PopulationManager : MonoBehaviour
         {
             //Solution is reached..
             Debug.Log("PSO SOLUTION: Final fitness: " + GlobalBestNN_Fitness);
+            WriteBestWeightsToFile();
+            Debug.Log("Best Weights saved to file...");
             //Save BEST Global Weights to a new text file: or put them in one car and let it race
         }
         
@@ -280,6 +284,25 @@ public class PopulationManager : MonoBehaviour
     public void CallInAsTravelledFar() 
     {
         carsGettingFar = carsGettingFar + 1;
+    }
+
+    public void WriteBestWeightsToFile() 
+    {
+        StreamWriter sr = new StreamWriter("best_weights(" + DateTime.Now + ").dat");
+        sr.WriteLine("Fitness: " + GlobalBestNN_Fitness);
+        int layer = 0;
+        foreach (float[][] cur in GlobalBestWeights)
+        {
+            for (int x = 0, length = cur.Length; x < length; x++)
+            {
+                for (int y = 0, innerLength = cur[x].Length; y < innerLength; y++)
+                {   
+                    sr.WriteLine("{0}{1}{2}:{3}",layer,x,y,cur[x][y]);
+                }
+            }
+            layer++;
+        }
+        sr.Close();
     }
 
     // Generate Randomly Initialised Weights
