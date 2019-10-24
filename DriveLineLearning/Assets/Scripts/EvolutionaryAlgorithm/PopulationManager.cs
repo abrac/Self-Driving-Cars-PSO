@@ -24,7 +24,7 @@ public class PopulationManager : MonoBehaviour
 
     // Stored Personal Best of each individual 
     private List<List<float[][]>> PersonalBestNN_Weights = new List<List<float[][]>>();
-    private List<float> PersonalBestNN_Fitness = new List<float>();
+    public List<float> PersonalBestNN_Fitness = new List<float>();
 
     // Stored y-Hat of each individual (using Ring topology)
     private List<List<float[][]>> Y_HatNN_Weights = new List<List<float[][]>>();
@@ -32,7 +32,7 @@ public class PopulationManager : MonoBehaviour
 
     // Stored Global Best Weights and fitness achieved
     private List<float[][]> GlobalBestWeights = new List<float[][]>();
-    private float GlobalBestNN_Fitness;
+    public float GlobalBestNN_Fitness;
 
     // Links to used Game Objects
     public GameObject BestCarDemo;
@@ -53,9 +53,6 @@ public class PopulationManager : MonoBehaviour
     [SerializeField]
     private int numberCarsDriving = 0;
     [SerializeField]
-    private int carsGettingFar = 0;
-
-    public bool useTimeInFitness = false;
 
 
     // Create genes(weights) property and instantiate and position cars
@@ -140,7 +137,6 @@ public class PopulationManager : MonoBehaviour
         // Start of evolutionary cycles
         else if (/*curGeneration <= MAX_GENERATIONS &&*/ leadCounter < BEST_INDIVIDUAL_STREAK)
         {
-            if (carsGettingFar >= 5) { useTimeInFitness = true; }
 
             // have fitness calc in each car as it crashes. have a method that the car calls to decrease NumberCarsDriving by 1.
             // Fetch each car's latest NN fitness
@@ -155,12 +151,12 @@ public class PopulationManager : MonoBehaviour
                         PersonalBestNN_Fitness[curIndividual] = GetA_CarsNN_Fitness(curIndividual);
                         PersonalBestNN_Weights[curIndividual] = CloneOfWeights(GetA_CarsNN_Weights(curIndividual));
                     }
-                    // Update Ring Topology Best
+                    /*// Update Ring Topology Best
                     if (PersonalBestNN_Fitness[curIndividual] > Y_HatNN_Fitness[curIndividual]) 
                     {
                         Y_HatNN_Fitness[curIndividual] = PersonalBestNN_Fitness[curIndividual];
                         Y_HatNN_Weights[curIndividual] = CloneOfWeights(PersonalBestNN_Weights[curIndividual]);
-                    }
+                    }*/
                     /*// Global Best // NOTE: Performed later in UpdateGlobalAndY_HatRingTopologyBestVectors(false);
                     if (personalBests.get(curIndividual)[4] > globalBest[4]) 
                     {
@@ -184,7 +180,7 @@ public class PopulationManager : MonoBehaviour
                     List<float[][]> bobIndividual = GetA_CarsNN_Weights(bob);
                     List<float[][]> bobVelocity = ParticleVelocityVectors[bob];
                     List<float[][]> bobPersonalBest = PersonalBestNN_Weights[bob];
-                    List<float[][]> bobYHat = Y_HatNN_Weights[bob];
+                    //List<float[][]> bobYHat = Y_HatNN_Weights[bob];
                     // for each dimension of the Vectors
                     for (int layer = 0; layer < bobVelocity.Count; layer++) 
                     {
@@ -195,9 +191,9 @@ public class PopulationManager : MonoBehaviour
                                 socialRandom = UnityEngine.Random.Range(0f,1f);
                                 cognitiveRandom = UnityEngine.Random.Range(0f,1f);
                                 // Gbest
-                                //bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(GlobalBestWeights[layer][to][from] - bobIndividual[layer][to][from]);                                                            
+                                bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(GlobalBestWeights[layer][to][from] - bobIndividual[layer][to][from]);                                                            
                                 // Ring Topology
-                                bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
+                                //bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
                             }
                         } 
                     }
@@ -276,7 +272,6 @@ public class PopulationManager : MonoBehaviour
             // Reset and Start
             BestCarDemo.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             BestCarDemo.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            PositionCarAtStartLine(BestCarDemo);
             BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().isDriving = true;
             BestCarDemo.GetComponent<NeuralNetwork>().WakeUp();
             BestCarDemo.GetComponent<Timer>().ResetTimer();
@@ -301,11 +296,6 @@ public class PopulationManager : MonoBehaviour
         return newCopy;
     }
 
-    public void CallInAsTravelledFar() 
-    {
-        carsGettingFar = carsGettingFar + 1;
-    }
-
     public void WriteBestWeightsToFile() 
     {
         NeuralNetwork NN = BestCarDemo.GetComponent<NeuralNetwork>();
@@ -313,9 +303,9 @@ public class PopulationManager : MonoBehaviour
 
         StreamWriter sr = new StreamWriter(path,true);
         sr.WriteLine("/////////////////// START ///////////////////");
-        sr.WriteLine("Hidden layers: ", NN.hiddenLayers);
-        sr.WriteLine("Hidden layer size: ", NN.hLayer_size);
-        sr.WriteLine("Hidden layers: ", NN.hiddenLayers);
+        sr.WriteLine("Hidden layers: {0}", NN.hiddenLayers);
+        sr.WriteLine("Hidden layer size: {0}", NN.hLayer_size);
+        sr.WriteLine("Hidden layers: {0}", NN.hiddenLayers);
 
         sr.WriteLine("Fitness: " + GlobalBestNN_Fitness);
         int layer = 0;
@@ -325,7 +315,7 @@ public class PopulationManager : MonoBehaviour
             {
                 for (int y = 0, innerLength = cur[x].Length; y < innerLength; y++)
                 {   
-                    sr.WriteLine("{0}{1}{2}:{3}",layer,x,y,cur[x][y]);
+                    sr.WriteLine("{0}:{1}:{2}:{3}",layer,x,y,cur[x][y]);
                 }
             }
             layer++;
@@ -427,7 +417,9 @@ public class PopulationManager : MonoBehaviour
 
     private void UpdateGlobalAndY_HatRingTopologyBestVectors(bool initilizationStep = false) 
     {
-        List<List<float[][]>> originWeights = Y_HatNN_Weights;
+        List<List<float[][]>> originWeights = PersonalBestNN_Weights;
+        List<float> originFitness = PersonalBestNN_Fitness;
+        /*List<List<float[][]>> originWeights = Y_HatNN_Weights;
         List<float> originFitness = Y_HatNN_Fitness;
         // If before first generation, get best of neighbour's personal bests instead
         if (initilizationStep) 
@@ -455,22 +447,26 @@ public class PopulationManager : MonoBehaviour
 
             // Update the Y_Hat values
             if (!initilizationStep) {
-                Y_HatNN_Fitness[indexOfRingY_HatFittest] = originFitness[indexOfRingY_HatFittest];
-                Y_HatNN_Weights[indexOfRingY_HatFittest] = CloneOfWeights(originWeights[indexOfRingY_HatFittest]);
+                Y_HatNN_Fitness[index] = originFitness[indexOfRingY_HatFittest];
+                Y_HatNN_Weights[index] = CloneOfWeights(originWeights[indexOfRingY_HatFittest]);
             }
             else
             {
                 Y_HatNN_Fitness.Add(originFitness[indexOfRingY_HatFittest]);
                 Y_HatNN_Weights.Add(CloneOfWeights(originWeights[indexOfRingY_HatFittest]));
             }
-        }
+        }*/
+        int indexOfGlobalFittest = GetIndexOfFittest(originFitness);
         if (GlobalBestNN_Fitness < originFitness[indexOfGlobalFittest])
         {
             // Update the global best weights
             GlobalBestNN_Fitness = originFitness[indexOfGlobalFittest];
             GlobalBestWeights = CloneOfWeights(originWeights[indexOfGlobalFittest]);
+            // Reset Demo car
+            BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().ResetAndLogCarTermination();
+
             //Print Best Fitness
-            Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration);
+            Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration + "; First weight: " + GlobalBestWeights[0][0][0]);
         }
         
     }

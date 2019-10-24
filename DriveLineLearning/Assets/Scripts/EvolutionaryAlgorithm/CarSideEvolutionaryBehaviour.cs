@@ -15,6 +15,12 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
 
     public bool isDemo = false;
 
+    static int NumberCarsFinished = 0;
+
+    private float finishingBonus;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,8 +29,9 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         lastPosition = transform.position;
 
         StationaryPos = transform.position;
-        StartPos = transform.position;;
+        StartPos = this.gameObject.transform.position;;
         startTime = Time.time;
+        finishingBonus = 1;
 
     }
 
@@ -37,7 +44,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         float t = Time.time - startTime;
         if (t > 5)
         {
-            if (Vector3.Distance(StationaryPos, transform.position) < 15)
+            if (Vector3.Distance(StationaryPos, transform.position) < 5)
             {
                 GameObject car = this.gameObject;
                 if (car.GetComponent<NeuralNetwork>().sleep == false /*&& !isDemo*/)
@@ -52,23 +59,25 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        ResetAndLogCarTermination();
+        if (isDriving == true) {
+            /*if (isDemo && NumberCarsFinished > 30) 
+            {
+                evolutionManager.GetComponent<PopulationManager>().GlobalBestNN_Fitness -= 10*NumberCarsFinished;
+            }*/
+            ResetAndLogCarTermination();
+        }
     }
 
-    private void ResetAndLogCarTermination()
+    public void ResetAndLogCarTermination()
     {
         if (!isDemo) 
         {
             GameObject car = this.gameObject;
             PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
             car.GetComponent<NeuralNetwork>().Sleep();
-            if (distanceTravelled > 1000)
-            {
-                popMan.CallInAsTravelledFar();
-            }
-            fitness = fitnessFunction(); // not necessary, as fitness is Global
-            distanceTravelled = 0;
+            CalculateTheIndividualsFitness();
             popMan.PositionCarAtStartLine(car);
+            lastPosition = transform.position;
             isDriving = false;
         }
         else 
@@ -76,7 +85,10 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
             GameObject car = this.gameObject;
             PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
             // Stop
+            popMan.PositionCarAtStartLine(car);
+            lastPosition = transform.position;
             distanceTravelled = 0;
+            finishingBonus = 1;
             car.GetComponent<NeuralNetwork>().Sleep();
             isDriving = false;
             
@@ -84,35 +96,48 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         }        
     }
 
-    private float fitnessFunction() 
+    private float CalculateTheIndividualsFitness() 
     {
+        // Get the Time elapsed
         //float time = evolutionManager.GetComponent<Timer>().timeElapsedInSec; // Using a master timer
         float time = this.gameObject.GetComponent<Timer>().timeElapsedInSec; // used if each car has a timer
-        if (evolutionManager.GetComponent<PopulationManager>().useTimeInFitness)
-        {
-            if(/*distanceTravelled > 800 ||*/ Vector3.Distance(StartPos, transform.position) > 6)
-            {
-                //fitness = Mathf.Pow(distanceTravelled,2) + Mathf.Pow(distanceTravelled/time*0.0001f,distanceTravelled/10);
-                fitness = Mathf.Pow(distanceTravelled,2)/*/time*/;
-            }
-            else
-            {
-                fitness = - distanceTravelled/2;
-            }
-        }
-        else
-        {
-            if(/*distanceTravelled > 800 &&*/ Vector3.Distance(StartPos, transform.position) > 6)
-            {
-                //fitness = Mathf.Pow(distanceTravelled,2) + Mathf.Pow(distanceTravelled/time*0.0001f,distanceTravelled/10);
-                fitness = Mathf.Pow(distanceTravelled,2)/*/time*/;
-            }
-            else
-            {
-                fitness= - distanceTravelled/2;
-            }
-        }
 
-        return fitness;
+
+        // Base Fitness on time or not
+        /*if (NumberCarsFinished > 5) //Then use time in fitness
+        {*/
+            //fitness = Mathf.Pow(distanceTravelled,2) + Mathf.Pow(distanceTravelled/time*0.0001f,distanceTravelled/10);
+        if (distanceTravelled != 0)
+            fitness = finishingBonus * Mathf.Pow(distanceTravelled,2)/time; //* distanceTravelled/time;
+        /*}
+        else // Don't use Time
+        {
+            //fitness = Mathf.Pow(distanceTravelled,2) + Mathf.Pow(distanceTravelled/time*0.0001f,distanceTravelled/10);
+            fitness = finishingBonus + Mathf.Pow(distanceTravelled,2) + distanceTravelled/time;
+        }*/
+        // If too close to the starting Line make fitness negative
+        float distCovered = Vector3.Distance(StartPos, this.gameObject.transform.position);
+        if(finishingBonus == 1 && distCovered < 10 && distanceTravelled != 0)
+        {
+            fitness = - distCovered - 10;
+        }
+        distanceTravelled = 0;
+        finishingBonus = 1;
+
+        return fitness; // fitness is global -- so doesn't necessarily have to return
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (isDriving == true)
+        {
+            /*if (isDemo && NumberCarsFinished > 30) 
+            {
+                evolutionManager.GetComponent<PopulationManager>().GlobalBestNN_Fitness += 10*NumberCarsFinished;
+            }*/
+            NumberCarsFinished++;
+            float time = this.gameObject.GetComponent<Timer>().timeElapsedInSec;
+            finishingBonus = 1.5f;//1000 * Mathf.Pow(distanceTravelled/time,1);
+            ResetAndLogCarTermination();
+        }
     }
 }

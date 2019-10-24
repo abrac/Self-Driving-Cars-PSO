@@ -166,7 +166,7 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4364079860770384708}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Convex: 1
@@ -187,6 +187,19 @@ MonoBehaviour:
   SpeedText: {fileID: 0}
   speed2: 0
   car: {fileID: 4364079860770384708}
+--- !u!114 &571798151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4364079860770384708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65bc2d311e2544fa8ba46b49d548c495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeElapsedInSec: 0
 --- !u!114 &2024134224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,19 +235,6 @@ MonoBehaviour:
   inputs: 5
   maxValue: 1
   sleep: 0
---- !u!114 &571798151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4364079860770384708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65bc2d311e2544fa8ba46b49d548c495, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeElapsedInSec: 0
 --- !u!64 &217503199
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -289,6 +289,10 @@ PrefabInstance:
     - target: {fileID: 100042, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
+      propertyPath: m_Topspeed
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 11400024, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_Enabled
@@ -345,6 +349,21 @@ PrefabInstance:
     - target: {fileID: 400050, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_LocalScale.z
       value: 1.0000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 743013818040981038, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 743013818040981038, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 743013818040981038, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 14600006, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_Center.y
@@ -528,6 +547,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5780783660830411734, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
+        type: 3}
+      propertyPath: feelerDists.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5780783660830411734, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
+        type: 3}
+      propertyPath: feelerLength
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 5780783660830411734, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
+        type: 3}
+      propertyPath: heightOffGround
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5780783660830411734, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
+        type: 3}
+      propertyPath: fieldOfView
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 2300006, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_Materials.Array.data[0]

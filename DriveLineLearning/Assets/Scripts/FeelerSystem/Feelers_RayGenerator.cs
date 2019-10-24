@@ -5,9 +5,10 @@ using System;
 
 public class Feelers_RayGenerator : MonoBehaviour
 { 
-    public float[] feelerDists = new float[5];
+    public float[] feelerDists = new float[9];
     public float fieldOfView = 120;
-    public float feelerLength = 30;
+    public float feelerLength = 70;
+    public float heightOffGround = 0.4f;
 
     // Start is called before the first frame update
     void Start()
@@ -32,14 +33,14 @@ public class Feelers_RayGenerator : MonoBehaviour
         Vector3 directionVector = transform.localPosition + new Vector3((float)Math.Sin(angle), 0, (float)(Math.Cos(angle)));
         directionVector = transform.TransformVector(directionVector);
 
-        if (Physics.Raycast(transform.position, directionVector, out hit, feelerLength))
+        if (Physics.Raycast(transform.position + new Vector3(0,heightOffGround,0), directionVector, out hit, feelerLength))
         {
-            Debug.DrawRay(transform.position, directionVector * hit.distance, Color.yellow);
+            Debug.DrawRay(transform.position + new Vector3(0,heightOffGround,0), directionVector * hit.distance, Color.yellow);
             dist = hit.distance;
         }
         else
         {
-            Debug.DrawRay(transform.position, directionVector * feelerLength, Color.blue);
+            Debug.DrawRay(transform.position + new Vector3(0,heightOffGround,0), directionVector * feelerLength, Color.blue);
             dist = feelerLength;
         }
         return dist;
