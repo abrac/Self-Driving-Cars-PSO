@@ -199,6 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65bc2d311e2544fa8ba46b49d548c495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TimerText: {fileID: 0}
   timeElapsedInSec: 0
 --- !u!114 &2024134224
 MonoBehaviour:
@@ -556,7 +557,7 @@ PrefabInstance:
     - target: {fileID: 5780783660830411734, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
         type: 3}
       propertyPath: feelerLength
-      value: 120
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 5780783660830411734, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
         type: 3}

@@ -997,6 +997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65bc2d311e2544fa8ba46b49d548c495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TimerText: {fileID: 0}
   timeElapsedInSec: 0
 --- !u!114 &552897255
 MonoBehaviour:
@@ -1056,6 +1057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53481698aa8e5eb428cdc7531ccb2649, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  File: {fileID: 0}
 --- !u!1 &571798142 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4364079860770384708, guid: 42499a7bc787ba24bb426d0854ab07e4,
@@ -1792,6 +1794,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: SpeedText
+      value: 
+      objectReference: {fileID: 183622769}
     - target: {fileID: 4364079860769896252, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1857,23 +1863,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: SpeedText
-      value: 
-      objectReference: {fileID: 183622769}
-    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: evolutionManager
-      value: 
-      objectReference: {fileID: 1814106949}
-    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4364079860768126446, guid: 42499a7bc787ba24bb426d0854ab07e4,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 260e103c9b6926a49a20c0aa3487af11, type: 2}
     - target: {fileID: 7829837386435257944, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: feelerDists.Array.size
@@ -1883,6 +1872,19 @@ PrefabInstance:
         type: 3}
       propertyPath: feelerLength
       value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 4364079860768126446, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 260e103c9b6926a49a20c0aa3487af11, type: 2}
+    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: evolutionManager
+      value: 
+      objectReference: {fileID: 1814106949}
+    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
@@ -2277,6 +2279,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CarNNBased
       objectReference: {fileID: 0}
+    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: SpeedText
+      value: 
+      objectReference: {fileID: 183622769}
     - target: {fileID: 4364079860769896252, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2332,10 +2338,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: SpeedText
-      value: 
-      objectReference: {fileID: 183622769}
+    - target: {fileID: 4364079860760174284, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: m_Topspeed
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 4364079860760174284, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: m_FullTorqueOverAllWheels
+      value: 4000
+      objectReference: {fileID: 0}
     - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
       propertyPath: evolutionManager
       value: 
@@ -3675,6 +3687,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BestDemo
       objectReference: {fileID: 0}
+    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: SpeedText
+      value: 
+      objectReference: {fileID: 183622769}
     - target: {fileID: 4364079860769896252, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3740,10 +3756,21 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: SpeedText
+    - target: {fileID: 4364079860760174284, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: m_Topspeed
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 4364079860760174284, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: m_FullTorqueOverAllWheels
+      value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4364079860768126446, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 183622769}
+      objectReference: {fileID: 2100000, guid: c398271ce5e291947982f0a9e621bfff, type: 2}
     - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
       propertyPath: evolutionManager
       value: 
@@ -3752,11 +3779,6 @@ PrefabInstance:
       propertyPath: isDemo
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4364079860768126446, guid: 42499a7bc787ba24bb426d0854ab07e4,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: c398271ce5e291947982f0a9e621bfff, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
 --- !u!1 &2049026178
