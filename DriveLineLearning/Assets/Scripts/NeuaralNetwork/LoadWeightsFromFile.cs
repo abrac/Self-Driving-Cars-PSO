@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class LoadWeightsFromFile : MonoBehaviour
 {
+    public TextAsset File;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -13,7 +15,7 @@ public class LoadWeightsFromFile : MonoBehaviour
 
         this.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         this.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        this.gameObject.GetComponent<CarSideEvolutionaryBehaviour>().isDriving = true;
+        //this.gameObject.GetComponent<CarSideEvolutionaryBehaviour>().isDriving = true;
         this.gameObject.GetComponent<NeuralNetwork>().WakeUp();
         this.gameObject.GetComponent<Timer>().ResetTimer();
         
@@ -22,14 +24,15 @@ public class LoadWeightsFromFile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.gameObject.GetComponent<CarSideEvolutionaryBehaviour>().isDriving = true;
+        //this.gameObject.GetComponent<CarSideEvolutionaryBehaviour>().isDriving = true;
         this.gameObject.GetComponent<NeuralNetwork>().WakeUp();
     }
 
     private void SetCarsNN_WeightsToThoseReadInFromFile() 
     {
         NeuralNetwork NN = this.gameObject.GetComponent<NeuralNetwork>();
-        string path = "Assets/Best weights Logs/WeightsForCarToUse.txt";
+        string path = "Assets/Best weights Logs/";
+        path = path + File.name + ".txt";
 
         StreamReader sr = new StreamReader(path);
         sr.ReadLine();//WriteLine("/////////////////// START ///////////////////");
@@ -52,4 +55,5 @@ public class LoadWeightsFromFile : MonoBehaviour
         //sr.WriteLine("///////////////////  END  ///////////////////");
         sr.Close();
     }
+
 }
