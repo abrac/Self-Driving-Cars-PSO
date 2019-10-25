@@ -21,6 +21,6 @@ public class Speed : MonoBehaviour
         speed2 = car.GetComponent<UnityStandardAssets.Vehicles.Car.CarController>().CurrentSpeed;
         string SpeedToShow = Mathf.Abs(((int)speed2)).ToString();
 
-        SpeedText.text = SpeedToShow + "km/h";
+        if  (SpeedText != null) SpeedText.text = SpeedToShow + "km/h";
     }
 }

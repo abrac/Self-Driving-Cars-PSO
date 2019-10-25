@@ -16,6 +16,8 @@ public class PopulationManager : MonoBehaviour
     // The car population script Component
     public CarPopulation cars;
 
+    private float sessionStartTime;
+
     // Individuals of the population's fitness
     private List<float> CurrentNN_Fitness = new List<float>();
 
@@ -36,9 +38,6 @@ public class PopulationManager : MonoBehaviour
 
     // Links to used Game Objects
     public GameObject BestCarDemo;
-
-    // Weights (vector dimensions) based on car's NN structure in the form: List index = layer; int[2] with { totalfromN,s, totalToN,s };
-    //private List<int[]> Weights_template_dimensions; // IGNORE->: + one array of size 1 added (to Store the fitness)
 
     // PSO parameters
     public float cognitiveConst = 0.7f;
@@ -66,9 +65,11 @@ public class PopulationManager : MonoBehaviour
         curGeneration = 0;
         leadCounter = 0;
 
-        if (logOutputs)
+        // Open logging files
+        if (logOutputs && sessionStartTime == 0)
         {
-            Feelers_RayGenerator feelerSettings = cars.carPopulation[0].GetComponent<Feelers_RayGenerator>();
+            sessionStartTime = Time.time;
+            Feelers_RayGenerator feelerSettings = cars.carPopulation[0].transform.GetChild(0).gameObject.GetComponent<Feelers_RayGenerator>();
             NeuralNetwork NN = cars.carPopulation[0].GetComponent<NeuralNetwork>();
             // Initialize naming conventions (open/create all the files) add a time stamp line to each
             if (folderToSaveTo.Length != 0) 
@@ -82,26 +83,6 @@ public class PopulationManager : MonoBehaviour
             outputStream.WriteLine("///// " + filepath);
         }
 
-        
-
-        // Get "chromosome structure" from NeuralNetwork structure
-        /*List<float[][]> Weights_Template = NeuralNetworkControlledCar.GetComponent<NeuralNetwork>().weights;
-        foreach(float[][] cur in Weights_Template)
-        {
-            Weights_template_dimensions.Add(new int[] {cur.Length, cur[0].Length});
-        }
-        //Weights_template_dimensions.Add(new int[] {0}); // Stores fitness of this configuration
-
-        // Create genes array representing weights of NN, and initialize with random NN weights.
-        for (int x = 0; x < POPULATION_SIZE; x++)
-        {
-            GameObject newCar = GameObject.Instantiate(NeuralNetworkControlledCar);
-            PositionCarAtStartLine(newCar);
-            NeuralNetwork carsNN = newCar.GetComponent<NeuralNetwork>();
-            carsNN.weights = GenerateRandomlyInitializedWeights();
-            // Add the car to the population
-            CarPopulation.Add(newCar);
-        }*/
 
         //Initialize Velocity Vectors to Zero
         ParticleVelocityVectors = new List<List<float[][]>>();
@@ -118,8 +99,7 @@ public class PopulationManager : MonoBehaviour
         {
             outputStream.WriteLine("///////////////////  END  ///////////////////");
             outputStream.Close();
-        }
-            
+        }   
     }
 
     void FixedUpdate()
@@ -153,23 +133,16 @@ public class PopulationManager : MonoBehaviour
                 UpdateGlobalAndY_HatRingTopologyBestVectors(true);
             
                 // reset test cycle - new generation
-                /*foreach (GameObject car in cars.carPopulation)
-                {
-                    PositionCarAtStartLine(car);
-                }*/
                 curGeneration++;
-                // Set cars to be driving again
-                // ...here... Generation 1.. GO!
-                EnableAllTheCarsNNs/*AndResetTimer*/();
+                EnableAllTheCrashedCarsNNs();
             }
         }
         // Start of evolutionary cycles
-        else if (/*curGeneration <= MAX_GENERATIONS &&*/ leadCounter < BEST_INDIVIDUAL_STREAK)
+        else if (leadCounter < BEST_INDIVIDUAL_STREAK)
         {
 
             // have fitness calc in each car as it crashes. have a method that the car calls to decrease NumberCarsDriving by 1.
             // Fetch each car's latest NN fitness
-
             for (int curIndividual = 0; curIndividual < POPULATION_SIZE; curIndividual++) 
             {
                 if (!cars.carPopulation[curIndividual].gameObject.GetComponent<CarSideEvolutionaryBehaviour>().isDriving) 
@@ -180,26 +153,11 @@ public class PopulationManager : MonoBehaviour
                         PersonalBestNN_Fitness[curIndividual] = GetA_CarsNN_Fitness(curIndividual);
                         PersonalBestNN_Weights[curIndividual] = CloneOfWeights(GetA_CarsNN_Weights(curIndividual));
                     }
-                    /*// Update Ring Topology Best
-                    if (PersonalBestNN_Fitness[curIndividual] > Y_HatNN_Fitness[curIndividual]) 
-                    {
-                        Y_HatNN_Fitness[curIndividual] = PersonalBestNN_Fitness[curIndividual];
-                        Y_HatNN_Weights[curIndividual] = CloneOfWeights(PersonalBestNN_Weights[curIndividual]);
-                    }*/
-                    /*// Global Best // NOTE: Performed later in UpdateGlobalAndY_HatRingTopologyBestVectors(false);
-                    if (personalBests.get(curIndividual)[4] > globalBest[4]) 
-                    {
-                        globalBest = cloneArray(personalBests.get(curIndividual));
-                        leadCounter = 0;
-                    }*/
                 }
             }
 
             // Recalculate latest ring Y_Hats 
             UpdateGlobalAndY_HatRingTopologyBestVectors(false);
-
-            //Print Best Fitness
-            //Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration);
 
             // Calculate new velocity for each individual
             for (int bob = 0; bob < cars.carPopulation.Count; bob++) 
@@ -220,13 +178,10 @@ public class PopulationManager : MonoBehaviour
                                 socialRandom = UnityEngine.Random.Range(0f,1f);
                                 cognitiveRandom = UnityEngine.Random.Range(0f,1f);
                                 // Gbest
-                                bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(GlobalBestWeights[layer][to][from] - bobIndividual[layer][to][from]);                                                            
-                                // Ring Topology
-                                //bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(bobYHat[layer][to][from] - bobIndividual[layer][to][from]);                                                            
+                                bobVelocity[layer][to][from] = w*bobVelocity[layer][to][from] + cognitiveConst*cognitiveRandom*(bobPersonalBest[layer][to][from] - bobIndividual[layer][to][from]) + socialConst*socialRandom*(GlobalBestWeights[layer][to][from] - bobIndividual[layer][to][from]);                                                                                                                    
                             }
                         } 
                     }
-
                     // Apply new velocity to Particle
                     for (int layer = 0; layer < bobVelocity.Count; layer++) 
                     {
@@ -238,45 +193,33 @@ public class PopulationManager : MonoBehaviour
                             }
                         }
                     }
-
                     // Place new Gen weights back in the car
                     cars.carPopulation[bob].GetComponent<NeuralNetwork>().weights = bobIndividual;
                 }
             }
 
             // reset test cycle - new generation
-            /*foreach (GameObject car in cars.carPopulation)
-            {
-                PositionCarAtStartLine(car);
-            }*/
-            curGeneration++;
+            //curGeneration++;
             leadCounter++;
             // Set cars to be driving again
             // ...here... Generation 1.. GO!
-            EnableAllTheCarsNNs/*AndResetTimer*/();
+            EnableAllTheCrashedCarsNNs/*AndResetTimer*/();
         }
         else 
         {
             //Solution is reached..
             Debug.Log("PSO SOLUTION: Final fitness: " + GlobalBestNN_Fitness);
+            if (logOutputs)
+            {
+                //Log final best fitness for graph
+                outputStream.WriteLine((Time.time-sessionStartTime + ";" + GlobalBestNN_Fitness).Replace(',','.'));
+            }
+            // Record the Solution's weights
             WriteBestWeightsToFile();
             Debug.Log("Best Weights saved to file...");
             leadCounter = 0;
             //Save BEST Global Weights to a new text file: or put them in one car and let it race
         }
-        
-        // Steps:
-        //  1. Check for collision triggers.
-        //  2. If a collision happened:
-        //      2.1. Disable Car. (Geoff: Car or Car's NN? suppose doesnt matter)
-        //      2.2. Evaluate fitness.
-        //      2.3. Store fitness and weights in personalBestWeights (if applicable)
-        //      2.4. Store fitness and weights in globalBestWeights (if applicable)
-        // 3. If all cars have collided (when collisionCounter = popSize):
-        //      3.1. Update all the particle "positions" (i.e. weights) and particle "velocities"
-        //      3.2. start a new generation by moving all cars to the startPosition
-        //      3.3. Enable Car.
-        // 4. If stopping conditions are met: stop, and save weights and other data to csv file.
     }
 
     public void PositionCarAtStartLine(GameObject car)
@@ -418,7 +361,7 @@ public class PopulationManager : MonoBehaviour
     }
 
     // Switch the cars' NNs back on
-    private void EnableAllTheCarsNNs/*AndResetTimer*/()
+    private void EnableAllTheCrashedCarsNNs/*AndResetTimer*/()
     {
         for (int x = 0; x < cars.carPopulation.Count; x++) 
         {
@@ -499,6 +442,12 @@ public class PopulationManager : MonoBehaviour
 
             //Print Best Fitness
             Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration + "; First weight: " + GlobalBestWeights[0][0][0]);
+
+            if (logOutputs)
+            {
+                //Log chane in best fitness for graph
+                outputStream.WriteLine((Time.time-sessionStartTime + ";" + GlobalBestNN_Fitness).Replace(',','.'));
+            }
         }
         
     }

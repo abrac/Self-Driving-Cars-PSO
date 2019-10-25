@@ -370,7 +370,7 @@ PrefabInstance:
     - target: {fileID: 368861221, guid: f4645e4722ce96d43b1f666df447d3ed, type: 3}
       propertyPath: File
       value: 
-      objectReference: {fileID: 4900000, guid: 51653de12f25e334e9d28035406d8c85, type: 3}
+      objectReference: {fileID: 4900000, guid: a868281fab6bac64596d75852756e7bd, type: 3}
     - target: {fileID: 2352462351052747760, guid: f4645e4722ce96d43b1f666df447d3ed,
         type: 3}
       propertyPath: m_FullTorqueOverAllWheels
@@ -379,13 +379,18 @@ PrefabInstance:
     - target: {fileID: 2352462351052747760, guid: f4645e4722ce96d43b1f666df447d3ed,
         type: 3}
       propertyPath: m_Topspeed
-      value: 500
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 2032798578977906619, guid: f4645e4722ce96d43b1f666df447d3ed,
         type: 3}
       propertyPath: TimerText
       value: 
       objectReference: {fileID: 552897255}
+    - target: {fileID: 4865092659489860622, guid: f4645e4722ce96d43b1f666df447d3ed,
+        type: 3}
+      propertyPath: outputs
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4645e4722ce96d43b1f666df447d3ed, type: 3}
 --- !u!1 &170076733
@@ -3784,11 +3789,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7731458645880283435, guid: 4388185a14c5215458694be96ebf96f7,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 757271557, guid: 4388185a14c5215458694be96ebf96f7, type: 3}
       propertyPath: m_LocalScale.y
       value: 0.2
@@ -3817,6 +3817,11 @@ PrefabInstance:
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 757271556, guid: 4388185a14c5215458694be96ebf96f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731458645880283435, guid: 4388185a14c5215458694be96ebf96f7,
+        type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}

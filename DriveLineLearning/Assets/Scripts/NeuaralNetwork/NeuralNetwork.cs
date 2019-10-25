@@ -17,7 +17,7 @@ public class NeuralNetwork : MonoBehaviour
     public int inputs = 0;
     public float maxValue = 1f;
     public bool sleep = false;
-    public List<float> outInput = new List<float>();
+    public float[] outInput;
  
     // List of neuron outputs and weights
     public List<List<float>> neurons;
@@ -34,6 +34,7 @@ public class NeuralNetwork : MonoBehaviour
         layers = hiddenLayers + 2; // total layers including input and output layers
         weights = new List<float[][]>(); //weight initialisation
         neurons = new List<List<float>>();
+        outInput = new float[outputs-2];
 
         // Assign Values to neurons
         for (int i = 0; i < layers; i++)
@@ -75,11 +76,11 @@ public class NeuralNetwork : MonoBehaviour
             for (int i = 0; i < feelerNum.feelerDists.Length; i++)
             {
                 inputs[i] = feelerNum.feelerDists[i];
-                j = i;
+                j++;
             }
-            j = j + 1; // to keep track of the counter used to add to the inputs list 
+            // j is to keep track of the counter used to add to the inputs list 
             int io = 0; // to iterate through the outputs, with the first 2 items passed as input to the car
-            for (int i = j; i < j + outInput.Count; i++)
+            for (int i = j; i < j + outInput.Length; i++)
             {
                 inputs[i] = outInput[io];
                 ++io;
@@ -91,9 +92,9 @@ public class NeuralNetwork : MonoBehaviour
 
             Feedforward(inputs);
             //Get outputs to be used for recurrent NN
-            for (int i = 2; i < outputs - 2; i++)
+            for (int i = 2; i < outputs; i++)
             {
-                outInput[i - 2] = getOutputs()[i];
+                outInput[i-2] = getOutputs()[i];
             }
             // pass the input to the car!
             float h = getOutputs()[0];
