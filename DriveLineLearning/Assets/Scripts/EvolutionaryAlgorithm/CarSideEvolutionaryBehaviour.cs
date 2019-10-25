@@ -92,13 +92,13 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
             // Stop
             
             // Meant to be a check to penalize the known best if it crashes - but not working right
-            if (!culled && NumberCarsFinished > 5 && !usurped)
+            if (!culled && NumberCarsFinished > 15 && !usurped)
             {
                 float distCovered = Vector3.Distance(StartPos, this.gameObject.transform.position);
                 if (distanceTravelled != 0)
                     tempStoreOfDistTravelled = distanceTravelled;
                 float latestFitness = CalculateTheIndividualsFitness();
-                if (latestFitness < 0.8f*popMan.GlobalBestNN_Fitness && tempStoreOfDistTravelled > 100 && isDriving)
+                if (latestFitness < 0.9f*popMan.GlobalBestNN_Fitness && tempStoreOfDistTravelled > 100 && isDriving)
                 {
                     this.gameObject.transform.position = StartPos;                    
                     // need to get the corresponding Personal-Best and adjust by same amount
@@ -106,8 +106,8 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
                     {
                         if (popMan.PersonalBestNN_Fitness[x] == popMan.GlobalBestNN_Fitness)
                         {
-                            popMan.PersonalBestNN_Fitness[x] = 0.8f*popMan.GlobalBestNN_Fitness;
-                            popMan.GlobalBestNN_Fitness = 0.8f*popMan.GlobalBestNN_Fitness;
+                            popMan.PersonalBestNN_Fitness[x] = latestFitness;
+                            popMan.GlobalBestNN_Fitness = latestFitness;
                         }
                     }
                 }

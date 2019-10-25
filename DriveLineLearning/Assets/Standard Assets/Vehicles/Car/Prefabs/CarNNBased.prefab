@@ -283,22 +283,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 100042, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
-      propertyPath: m_Name
-      value: CarNNBased
-      objectReference: {fileID: 0}
-    - target: {fileID: 100042, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400002, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
-      propertyPath: m_Topspeed
-      value: 300
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400024, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 72.85
@@ -351,19 +335,24 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.0000005
       objectReference: {fileID: 0}
-    - target: {fileID: 743013818040981038, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
+    - target: {fileID: 100042, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
+      propertyPath: m_Name
+      value: CarNNBased
       objectReference: {fileID: 0}
-    - target: {fileID: 743013818040981038, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
+    - target: {fileID: 100042, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
-    - target: {fileID: 743013818040981038, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
+    - target: {fileID: 11400002, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
+      propertyPath: m_FullTorqueOverAllWheels
+      value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
+      propertyPath: m_Topspeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 14600006, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
@@ -558,16 +547,6 @@ PrefabInstance:
         type: 3}
       propertyPath: feelerLength
       value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5780783660830411734, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
-        type: 3}
-      propertyPath: heightOffGround
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5780783660830411734, guid: 0e7ee4df08df88c4880f43398f9ad2c2,
-        type: 3}
-      propertyPath: fieldOfView
-      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 2300006, guid: 0e7ee4df08df88c4880f43398f9ad2c2, type: 3}
       propertyPath: m_Materials.Array.data[0]

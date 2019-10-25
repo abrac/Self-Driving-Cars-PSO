@@ -54,6 +54,10 @@ public class PopulationManager : MonoBehaviour
     private int numberCarsDriving = 0;
     [SerializeField]
 
+    // Variables For Outputting Data
+    public bool logOutputs  = false;
+    public string folderToSaveTo;
+    private StreamWriter outputStream;
 
     // Create genes(weights) property and instantiate and position cars
     void Start()
@@ -61,6 +65,22 @@ public class PopulationManager : MonoBehaviour
         // Initialize some variables
         curGeneration = 0;
         leadCounter = 0;
+
+        if (logOutputs)
+        {
+            Feelers_RayGenerator feelerSettings = cars.carPopulation[0].GetComponent<Feelers_RayGenerator>();
+            NeuralNetwork NN = cars.carPopulation[0].GetComponent<NeuralNetwork>();
+            // Initialize naming conventions (open/create all the files) add a time stamp line to each
+            if (folderToSaveTo.Length != 0) 
+                folderToSaveTo = folderToSaveTo + "/";
+            string filepath = String.Format("{0}Log(Feelr#={1}len{2};NN-w={3}socC={4}cognC={5};#recur={6};#hid={7})"
+                                        ,folderToSaveTo, feelerSettings.feelerDists.Length, feelerSettings.feelerLength, w, socialConst, cognitiveConst, NN.outputs-2, NN.hLayer_size);
+
+            outputStream = new StreamWriter("Assets/logs/" + filepath + ".txt", true);
+            outputStream.WriteLine("/////////////////// START ///////////////////");
+            outputStream.WriteLine("///// " + DateTime.Now);
+            outputStream.WriteLine("///// " + filepath);
+        }
 
         
 
@@ -91,6 +111,15 @@ public class PopulationManager : MonoBehaviour
 
         // Can't evaluate fitness until raced at least once...
         // So can build that in on Update() 
+    }
+
+    private void OnDestroy() {
+        if (logOutputs)
+        {
+            outputStream.WriteLine("///////////////////  END  ///////////////////");
+            outputStream.Close();
+        }
+            
     }
 
     void FixedUpdate()
