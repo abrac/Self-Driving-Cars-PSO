@@ -13,13 +13,12 @@ public class NeuralNetwork : MonoBehaviour
     // Neural Network parameters
     public int hiddenLayers = 1;
     public int hLayer_size = 5;
-    public int outputs = 2;
-    public int inputs =0;
+    public int outputs = 4;
+    public int inputs = 0;
     public float maxValue = 1f;
-    
-
     public bool sleep = false;
-
+    public List<float> outInput = new List<float>();
+ 
     // List of neuron outputs and weights
     public List<List<float>> neurons;
     public List<float[][]> weights { get; set; }
@@ -31,7 +30,7 @@ public class NeuralNetwork : MonoBehaviour
         m_Car = GetComponent<CarController>();
         Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
         size = feelerNum.feelerDists.GetLength(0);
-        inputs = size +3; // bias included in input layer
+        inputs = size +3 +(outputs-2);  //bias, carspeed and angle included in input layer, and the inputs for the recurrentNN from output
         layers = hiddenLayers + 2; // total layers including input and output layers
         weights = new List<float[][]>(); //weight initialisation
         neurons = new List<List<float>>();
@@ -64,17 +63,26 @@ public class NeuralNetwork : MonoBehaviour
             neurons.Add(layer);
         }
     }
+
  
     private void FixedUpdate()
     {
-        if (!sleep) 
+        if (!sleep)
         {
             Feelers_RayGenerator feelerNum = this.GetComponentInChildren<Feelers_RayGenerator>();
-       
-            float[] inputs = new float[size +3]; // initialised size of inputs as the num of feelers + 2 vars(speed and angle) and bias
-            for (int i = 0; i < inputs.GetLength(0)-3; i++)
+            float[] inputs = new float[size + 3 + (outputs - 2)]; // initialised size of inputs as the num of feelers + 2 vars(speed and angle),inputs from Output and bias
+            int j = 0;
+            for (int i = 0; i < feelerNum.feelerDists.Length; i++)
             {
                 inputs[i] = feelerNum.feelerDists[i];
+                j = i;
+            }
+            j = j + 1; // to keep track of the counter used to add to the inputs list 
+            int io = 0; // to iterate through the outputs, with the first 2 items passed as input to the car
+            for (int i = j; i < j + outInput.Count; i++)
+            {
+                inputs[i] = outInput[io];
+                ++io;
             }
             inputs[inputs.GetLength(0) - 3] = m_Car.CurrentSpeed;
             inputs[inputs.GetLength(0) - 2] = m_Car.CurrentSteerAngle;
@@ -82,6 +90,11 @@ public class NeuralNetwork : MonoBehaviour
 
 
             Feedforward(inputs);
+            //Get outputs to be used for recurrent NN
+            for (int i = 2; i < outputs - 2; i++)
+            {
+                outInput[i - 2] = getOutputs()[i];
+            }
             // pass the input to the car!
             float h = getOutputs()[0];
             float v = getOutputs()[1];
@@ -94,7 +107,6 @@ public class NeuralNetwork : MonoBehaviour
             m_Car.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             m_Car.Move(0, 0, 0, 0/*h, v, v, 0f*/);
         }
-        
     }
 
     public void WakeUp()
@@ -106,11 +118,6 @@ public class NeuralNetwork : MonoBehaviour
     {
         sleep = true;
     }
-
-    /*public void ChangeWeights(List<float[][]> weights)
-    {
-        this.weights = weights;
-    }*/
 
     public void Feedforward(float [] inputs)
     {
