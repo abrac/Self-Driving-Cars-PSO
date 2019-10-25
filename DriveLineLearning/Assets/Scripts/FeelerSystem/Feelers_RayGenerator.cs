@@ -32,8 +32,9 @@ public class Feelers_RayGenerator : MonoBehaviour
         //Getting direction vector, first in local space, then world space
         Vector3 directionVector = transform.localPosition + new Vector3((float)Math.Sin(angle), 0, (float)(Math.Cos(angle)));
         directionVector = transform.TransformVector(directionVector);
+        LayerMask mask = 9;
 
-        if (Physics.Raycast(transform.position + new Vector3(0,heightOffGround,0), directionVector, out hit, feelerLength))
+        if (Physics.Raycast(transform.position + new Vector3(0,heightOffGround,0), directionVector, out hit, feelerLength,mask))
         {
             Debug.DrawRay(transform.position + new Vector3(0,heightOffGround,0), directionVector * hit.distance, Color.yellow);
             dist = hit.distance;

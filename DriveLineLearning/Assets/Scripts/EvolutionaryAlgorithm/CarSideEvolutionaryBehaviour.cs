@@ -18,6 +18,8 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
     static int NumberCarsFinished = 0;
 
     private float finishingBonus;
+    private bool culled;
+    float tempStoreOfDistTravelled;
 
 
 
@@ -32,11 +34,12 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         StartPos = this.gameObject.transform.position;;
         startTime = Time.time;
         finishingBonus = 1;
+        culled = false;
 
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         distanceTravelled += Vector3.Distance(transform.position,lastPosition);
         lastPosition = transform.position;
@@ -44,11 +47,12 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         float t = Time.time - startTime;
         if (t > 5)
         {
-            if (Vector3.Distance(StationaryPos, transform.position) < 5)
+            if (Vector3.Distance(StationaryPos, this.gameObject.transform.position) < 5)
             {
                 GameObject car = this.gameObject;
-                if (car.GetComponent<NeuralNetwork>().sleep == false /*&& !isDemo*/)
+                if (car.GetComponent<NeuralNetwork>().sleep == false && !isDemo)
                 {
+                    culled = true;
                     ResetAndLogCarTermination();
                 }
             }
@@ -68,7 +72,7 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
         }
     }
 
-    public void ResetAndLogCarTermination()
+    public void ResetAndLogCarTermination(bool usurped = false)
     {
         if (!isDemo) 
         {
@@ -79,18 +83,43 @@ public class CarSideEvolutionaryBehaviour : MonoBehaviour
             popMan.PositionCarAtStartLine(car);
             lastPosition = transform.position;
             isDriving = false;
+            culled = false;
         }
         else 
         {
             GameObject car = this.gameObject;
             PopulationManager popMan = evolutionManager.GetComponent<PopulationManager>();
             // Stop
+            
+            // Meant to be a check to penalize the known best if it crashes - but not working right
+            if (!culled && NumberCarsFinished > 5 && !usurped)
+            {
+                float distCovered = Vector3.Distance(StartPos, this.gameObject.transform.position);
+                if (distanceTravelled != 0)
+                    tempStoreOfDistTravelled = distanceTravelled;
+                float latestFitness = CalculateTheIndividualsFitness();
+                if (latestFitness < 0.8f*popMan.GlobalBestNN_Fitness && tempStoreOfDistTravelled > 100 && isDriving)
+                {
+                    this.gameObject.transform.position = StartPos;                    
+                    // need to get the corresponding Personal-Best and adjust by same amount
+                    for (int x = 0; x < popMan.PersonalBestNN_Fitness.Count; x++)
+                    {
+                        if (popMan.PersonalBestNN_Fitness[x] == popMan.GlobalBestNN_Fitness)
+                        {
+                            popMan.PersonalBestNN_Fitness[x] = 0.8f*popMan.GlobalBestNN_Fitness;
+                            popMan.GlobalBestNN_Fitness = 0.8f*popMan.GlobalBestNN_Fitness;
+                        }
+                    }
+                }
+            }
+                
             popMan.PositionCarAtStartLine(car);
             lastPosition = transform.position;
             distanceTravelled = 0;
             finishingBonus = 1;
             car.GetComponent<NeuralNetwork>().Sleep();
             isDriving = false;
+            culled = false;
             
             popMan.ResetDemoCar();
         }        

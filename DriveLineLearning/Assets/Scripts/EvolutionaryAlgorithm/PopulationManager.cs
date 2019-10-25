@@ -265,6 +265,8 @@ public class PopulationManager : MonoBehaviour
     public void ResetDemoCar() 
     {
         // Update NN with Best Weights
+        if (BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().isDriving != true)
+        {
             if (GlobalBestWeights.Count != 0)
                 BestCarDemo.GetComponent<NeuralNetwork>().weights = CloneOfWeights(GlobalBestWeights);
             BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().fitness = GlobalBestNN_Fitness;
@@ -275,6 +277,7 @@ public class PopulationManager : MonoBehaviour
             BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().isDriving = true;
             BestCarDemo.GetComponent<NeuralNetwork>().WakeUp();
             BestCarDemo.GetComponent<Timer>().ResetTimer();
+        }
     }
     
     private List<float[][]> CloneOfWeights(List<float[][]> weightsToClone)
@@ -463,7 +466,7 @@ public class PopulationManager : MonoBehaviour
             GlobalBestNN_Fitness = originFitness[indexOfGlobalFittest];
             GlobalBestWeights = CloneOfWeights(originWeights[indexOfGlobalFittest]);
             // Reset Demo car
-            BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().ResetAndLogCarTermination();
+            BestCarDemo.GetComponent<CarSideEvolutionaryBehaviour>().ResetAndLogCarTermination(true);
 
             //Print Best Fitness
             Debug.Log("Best fitness:" + GlobalBestNN_Fitness + "; Generation: " + curGeneration + "; First weight: " + GlobalBestWeights[0][0][0]);

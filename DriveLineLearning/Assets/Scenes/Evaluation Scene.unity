@@ -370,7 +370,7 @@ PrefabInstance:
     - target: {fileID: 368861221, guid: f4645e4722ce96d43b1f666df447d3ed, type: 3}
       propertyPath: File
       value: 
-      objectReference: {fileID: 4900000, guid: d686b624254222448a84b681aa208116, type: 3}
+      objectReference: {fileID: 4900000, guid: 51653de12f25e334e9d28035406d8c85, type: 3}
     - target: {fileID: 2352462351052747760, guid: f4645e4722ce96d43b1f666df447d3ed,
         type: 3}
       propertyPath: m_FullTorqueOverAllWheels
