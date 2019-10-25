@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53481698aa8e5eb428cdc7531ccb2649, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  File: {fileID: 4900000, guid: a95a8c46f5b5fd54fa8c89fc5f12e61b, type: 3}
+  File: {fileID: 4900000, guid: e50671dc800b4734dac96e154ca9ca94, type: 3}
 --- !u!1 &6106519665693939802
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,7 +105,7 @@ PrefabInstance:
     - target: {fileID: 4364079860770384708, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: m_Name
-      value: CarNNBased EvaluationVariant
+      value: EvaluationCar
       objectReference: {fileID: 0}
     - target: {fileID: 4364079860769896252, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
@@ -177,8 +177,12 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.6666677
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+    - target: {fileID: 4364079860760174284, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: m_FullTorqueOverAllWheels
+      value: 4000
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
 --- !u!1 &2352462351042004600 stripped
 GameObject:

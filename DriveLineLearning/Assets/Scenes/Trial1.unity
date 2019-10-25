@@ -3917,31 +3917,6 @@ PrefabInstance:
       propertyPath: BestCarDemo
       value: 
       objectReference: {fileID: 849686220}
-    - target: {fileID: 7889055724212137038, guid: 4b7ba6cf258fd7c4ab372b8bb98c6088,
-        type: 3}
-      propertyPath: POPULATION_SIZE
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 7889055724212137038, guid: 4b7ba6cf258fd7c4ab372b8bb98c6088,
-        type: 3}
-      propertyPath: socialConst
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 7889055724212137038, guid: 4b7ba6cf258fd7c4ab372b8bb98c6088,
-        type: 3}
-      propertyPath: cognitiveConst
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7889055724212137038, guid: 4b7ba6cf258fd7c4ab372b8bb98c6088,
-        type: 3}
-      propertyPath: w
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 7889055724212137038, guid: 4b7ba6cf258fd7c4ab372b8bb98c6088,
-        type: 3}
-      propertyPath: BEST_INDIVIDUAL_STREAK
-      value: 10000
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b7ba6cf258fd7c4ab372b8bb98c6088, type: 3}
 --- !u!1001 &7731458645708376948

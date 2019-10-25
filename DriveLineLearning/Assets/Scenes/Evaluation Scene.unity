@@ -2963,7 +2963,7 @@ MonoBehaviour:
   extrude: 15
   edgeWidth: 2
   thickness: 1
-  debug: 1
+  debug: 0
   waypoints:
   - {x: -170.5, y: 1, z: -256.1}
   - {x: -211.8125, y: 1, z: -246.85}
@@ -3061,7 +3061,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 1657564682}
 --- !u!54 &1748912374

@@ -65,19 +65,19 @@ MonoBehaviour:
   POPULATION_SIZE: 30
   INITIAL_WEIGHTS_UPPER_BOUND: 1
   MAX_GENERATIONS: 500
-  BEST_INDIVIDUAL_STREAK: 5000
+  BEST_INDIVIDUAL_STREAK: 10000
   cars: {fileID: 7889055724212137035}
+  PersonalBestNN_Fitness: []
+  GlobalBestNN_Fitness: 0
   BestCarDemo: {fileID: 0}
-  cognitiveConst: 0.8
-  socialConst: 0.5
-  w: 1
+  cognitiveConst: 0.7
+  socialConst: 0.9
+  w: 0.8
   socialRandom: 0
   cognitiveRandom: 0
   curGeneration: 0
   leadCounter: 0
   numberCarsDriving: 0
-  carsGettingFar: 0
-  useTimeInFitness: 0
 --- !u!114 &7889055724212137032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,4 +90,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65bc2d311e2544fa8ba46b49d548c495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TimerText: {fileID: 0}
   timeElapsedInSec: 0

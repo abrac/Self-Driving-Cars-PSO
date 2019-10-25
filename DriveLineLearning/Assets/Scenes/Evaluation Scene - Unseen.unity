@@ -3576,20 +3576,6 @@ PrefabInstance:
       propertyPath: SpeedText
       value: 
       objectReference: {fileID: 183622769}
-    - target: {fileID: 368861221, guid: f4645e4722ce96d43b1f666df447d3ed, type: 3}
-      propertyPath: File
-      value: 
-      objectReference: {fileID: 4900000, guid: e50671dc800b4734dac96e154ca9ca94, type: 3}
-    - target: {fileID: 2352462351052747760, guid: f4645e4722ce96d43b1f666df447d3ed,
-        type: 3}
-      propertyPath: m_Topspeed
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 2352462351052747760, guid: f4645e4722ce96d43b1f666df447d3ed,
-        type: 3}
-      propertyPath: m_FullTorqueOverAllWheels
-      value: 4000
-      objectReference: {fileID: 0}
     - target: {fileID: 2032798578977906619, guid: f4645e4722ce96d43b1f666df447d3ed,
         type: 3}
       propertyPath: TimerText
