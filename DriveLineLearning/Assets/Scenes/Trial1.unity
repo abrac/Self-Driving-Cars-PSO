@@ -2243,6 +2243,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: CarNNBased
       objectReference: {fileID: 0}
+    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: SpeedText
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: evolutionManager
+      value: 
+      objectReference: {fileID: 1814106949}
     - target: {fileID: 4364079860769896252, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2298,18 +2306,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: SpeedText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: evolutionManager
-      value: 
-      objectReference: {fileID: 1814106949}
     - target: {fileID: 6895490927502131506, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: outputs
-      value: 5
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2092934822, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3654,6 +3654,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: BestDemo
       objectReference: {fileID: 0}
+    - target: {fileID: 571798151, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: TimerText
+      value: 
+      objectReference: {fileID: 552897255}
+    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: SpeedText
+      value: 
+      objectReference: {fileID: 183622769}
+    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: evolutionManager
+      value: 
+      objectReference: {fileID: 1814106949}
+    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: isDemo
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4364079860769896252, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3724,36 +3740,20 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.6666667
       objectReference: {fileID: 0}
-    - target: {fileID: 41244540, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: SpeedText
-      value: 
-      objectReference: {fileID: 183622769}
-    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: evolutionManager
-      value: 
-      objectReference: {fileID: 1814106949}
-    - target: {fileID: 2024134224, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: isDemo
-      value: 1
+    - target: {fileID: 6895490927502131506, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: outputs
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2092934822, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 480
       objectReference: {fileID: 0}
     - target: {fileID: 4364079860768126446, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: c398271ce5e291947982f0a9e621bfff, type: 2}
-    - target: {fileID: 571798151, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: TimerText
-      value: 
-      objectReference: {fileID: 552897255}
-    - target: {fileID: 6895490927502131506, guid: 42499a7bc787ba24bb426d0854ab07e4,
-        type: 3}
-      propertyPath: outputs
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2092934822, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 480
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
 --- !u!1 &2049026178

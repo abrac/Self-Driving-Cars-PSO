@@ -18,6 +18,10 @@ public class NeuralNetwork : MonoBehaviour
     public float maxValue = 1f;
     public bool sleep = false;
     public float[] outInput;
+
+    public float throttle;
+
+    public float steering;
  
     // List of neuron outputs and weights
     public List<List<float>> neurons;
@@ -97,6 +101,8 @@ public class NeuralNetwork : MonoBehaviour
                 outInput[i-2] = getOutputs()[i];
             }
             // pass the input to the car!
+            steering = getOutputs()[0];
+            throttle = getOutputs()[1];
             float h = getOutputs()[0];
             float v = getOutputs()[1];
             m_Car.Move(h, v, v, 0f);

@@ -295,6 +295,25 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 32243988}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &95300252 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7731458645085969295, guid: 4388185a14c5215458694be96ebf96f7,
+    type: 3}
+  m_PrefabInstance: {fileID: 7731458645708376948}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &95300254
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95300252}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10.000001, y: 1.4486517, z: 10.000001}
+  m_Center: {x: 1.1445651e-14, y: 0.35720944, z: -0.000030597046}
 --- !u!1001 &151676627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2303,6 +2322,26 @@ Transform:
   m_Father: {fileID: 410083036}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 34.591, z: 0}
+--- !u!1 &1315178727 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2352462351042004600, guid: f4645e4722ce96d43b1f666df447d3ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 151676627}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1315178730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315178727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79752a6907c397c41a09f28c4fe600fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logOutputs: 1
+  folderToSaveTo: Throt&Velo&Dist
 --- !u!1 &1364283574
 GameObject:
   m_ObjectHideFlags: 0
@@ -3825,5 +3864,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7731458645085969289, guid: 4388185a14c5215458694be96ebf96f7,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731458645085969289, guid: 4388185a14c5215458694be96ebf96f7,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7731458645085969289, guid: 4388185a14c5215458694be96ebf96f7, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4388185a14c5215458694be96ebf96f7, type: 3}
