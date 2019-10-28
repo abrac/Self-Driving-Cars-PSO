@@ -2309,7 +2309,12 @@ PrefabInstance:
     - target: {fileID: 6895490927502131506, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: outputs
-      value: 12
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895490927502131506, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: hLayer_size
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2092934822, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3743,7 +3748,12 @@ PrefabInstance:
     - target: {fileID: 6895490927502131506, guid: 42499a7bc787ba24bb426d0854ab07e4,
         type: 3}
       propertyPath: outputs
-      value: 12
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895490927502131506, guid: 42499a7bc787ba24bb426d0854ab07e4,
+        type: 3}
+      propertyPath: hLayer_size
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2092934822, guid: 42499a7bc787ba24bb426d0854ab07e4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4025,12 +4035,12 @@ PrefabInstance:
     - target: {fileID: 7889055724212137038, guid: 4b7ba6cf258fd7c4ab372b8bb98c6088,
         type: 3}
       propertyPath: folderToSaveTo
-      value: recurrent
+      value: Hidden
       objectReference: {fileID: 0}
     - target: {fileID: 7889055724212137038, guid: 4b7ba6cf258fd7c4ab372b8bb98c6088,
         type: 3}
       propertyPath: logOutputs
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b7ba6cf258fd7c4ab372b8bb98c6088, type: 3}
