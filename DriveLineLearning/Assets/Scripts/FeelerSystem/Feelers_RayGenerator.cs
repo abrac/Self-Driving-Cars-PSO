@@ -32,7 +32,10 @@ public class Feelers_RayGenerator : MonoBehaviour
         //Getting direction vector, first in local space, then world space
         Vector3 directionVector = transform.localPosition + new Vector3((float)Math.Sin(angle), 0, (float)(Math.Cos(angle)));
         directionVector = transform.TransformVector(directionVector);
-        LayerMask mask = 9;
+        LayerMask mask1 = 9;
+        LayerMask mask2 = 13;
+        LayerMask mask = mask1 | mask2;
+
 
         if (Physics.Raycast(transform.position + new Vector3(0,heightOffGround,0), directionVector, out hit, feelerLength,mask))
         {
