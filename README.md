@@ -40,5 +40,6 @@ The project will most likely comprise the following objectives/milestones:
 - [x] Determine how to evolve the population as efficiently as possible – seeing as it will be an actual race in a 3D environment – it may take a long time per generation – especially once the evolution progresses.
 - [ ] Depending on how quickly the team progresses through the initial stages of setup, and how effective/solid the evolutionary outcome is, there is a lot of flexibility regarding further exploration and experimentation on this topic (e.g. through a game)
  
- ![](_HiddenFiles/CarImage.png)
-Above: possible type of inputs to be fed into the neural network. Outputs could then translate to which parts of the car controller (such as accelerate, turn left,_ _turn right, or brake)_ _should be activated, deactivated,_ _or_ _remain_ _unchanged from previous state._
+![](_HiddenFiles/CarImage.png)
+ 
+Above: possible type of inputs to be fed into the neural network. Outputs could then translate to which parts of the car controller (such as accelerate, turn left, turn right, or brake) should be activated, deactivated, or remain unchanged from previous state.
