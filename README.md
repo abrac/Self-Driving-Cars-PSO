@@ -28,7 +28,7 @@ Thereby, we can expect that over the generations, the cars will learn to:
 1. Navigate the training track without crashing and be able to (at least partially) carry this auto-navigation ability over to unseen tracks.
 2. To find the racing line of the training track that makes the vehicle complete the track in the shortest possible time.
 
-## Proposed Methodology
+## Methodology
 
 The project will most likely comprise the following objectives/milestones:
 
