@@ -4,6 +4,9 @@
 
 This project uses a Particle Swarm Optimisation (PSO) to train the computer to control a vehicle (acceleration and steering) and navigate a race track as quick as possible. The project is written in C# and requires [Unity 3D](https://unity.com/).
 
+## Video
+[![Video of project](https://i.imgur.com/yWIlvLO.png)](https://www.youtube.com/watch?v=vOLzxJX3GNc)
+
 # Project Concept
 
 ## Topic Summary
